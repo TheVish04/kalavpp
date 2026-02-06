@@ -23,8 +23,12 @@ const Auth = () => {
         setError(null);
     };
 
-    // Mock Login Helper
 
+    // Mock Login Helper
+    const fillMock = (mockEmail, mockPassword) => {
+        setEmail(mockEmail);
+        setPassword(mockPassword);
+    };
 
     // Handle Authentication
     const handleAuth = async (e) => {
@@ -34,6 +38,22 @@ const Auth = () => {
         if (loading) return; // Prevent double submission
         setLoading(true);
         setError(null);
+
+        // DEV: Mock Login Bypass
+        const MOCK_BYPASS = {
+            'customer@gmail.com': { role: 'customer', path: '/shop' },
+            'creator@gmail.com': { role: 'vendor', path: '/vendor/dashboard' },
+            'admin@gmail.com': { role: 'admin', path: '/shop' } // Defaulting admin to shop for now
+        };
+
+        if (mode === 'login' && MOCK_BYPASS[email.trim()]) {
+            console.log('Using Mock Login Bypass');
+            setTimeout(() => {
+                navigate(MOCK_BYPASS[email.trim()].path);
+                setLoading(false);
+            }, 500); // Fake delay
+            return;
+        }
 
         try {
             if (mode === 'signup') {
@@ -355,6 +375,16 @@ const Auth = () => {
                                 {loading ? 'Processing...' : mode === 'login' ? 'Continue to Gallery' : 'Create Account'}
                             </motion.button>
                         </form>
+
+                        {/* Mock Login Buttons (Dev Helper) */}
+                        <div className="mt-8">
+                            <div className="text-xs text-center text-gray-500 mb-2 font-bold uppercase tracking-wider">Mock Logins (Bypass Auth)</div>
+                            <div className="flex gap-2 justify-center">
+                                <button type="button" onClick={() => fillMock('customer@gmail.com', '12345678')} className="text-[10px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1 rounded border border-white/10">Customer</button>
+                                <button type="button" onClick={() => fillMock('creator@gmail.com', '12345678')} className="text-[10px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1 rounded border border-white/10">Creator</button>
+                                <button type="button" onClick={() => fillMock('admin@gmail.com', '12345678')} className="text-[10px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1 rounded border border-white/10">Admin</button>
+                            </div>
+                        </div>
 
 
 

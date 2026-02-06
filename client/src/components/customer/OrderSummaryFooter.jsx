@@ -9,7 +9,7 @@ const OrderSummaryFooter = ({ order }) => {
     // Totals logic
     // Usually order.total_amount is the final.
     // We can reverse calc subtotal if needed or sum items.
-    const itemTotal = items.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+    const itemTotal = items.reduce((sum, item) => sum + ((item.price_at_purchase || item.price || 0) * (item.quantity || 1)), 0);
     const tax = itemTotal * 0.08;
     // Difference is shipping roughly
     const difference = (order.total_amount || 0) - itemTotal - tax;
@@ -50,7 +50,7 @@ const OrderSummaryFooter = ({ order }) => {
                                     <p className="text-gray-400 text-sm font-medium">{item.quantity || 1}</p>
                                 </div>
                                 <div className="text-right w-24">
-                                    <p className="text-white font-bold">${item.price?.toFixed(2)}</p>
+                                    <p className="text-white font-bold">${(item.price_at_purchase || item.price || 0).toFixed(2)}</p>
                                 </div>
                             </div>
                         );

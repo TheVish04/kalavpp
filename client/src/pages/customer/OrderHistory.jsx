@@ -32,7 +32,7 @@ const OrderHistory = () => {
                     total_amount,
                     order_items (
                         id,
-                        price,
+                        price_at_purchase,
                         products (
                             title,
                             image_url

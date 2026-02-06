@@ -3,7 +3,7 @@ import React from 'react';
 import { MapPin, CreditCard, ExternalLink } from 'lucide-react';
 
 const OrderInfoGrid = ({ order }) => {
-    const shipping = order.shipping_address || {}; // Based on our checkout schema
+    const shipping = order.shipping_details || order.shipping_address || {}; // Based on schema
     // Fallback if data structure slightly differs
     const name = shipping.firstName ? `${shipping.firstName} ${shipping.lastName}` : (shipping.fullName || 'User');
     const address = shipping.address || '123 Cyber Lane';

@@ -50,7 +50,7 @@ const Checkout = () => {
                         user_id: user?.id || null, // Handle guest checkout if allowed, or enforce auth
                         total_amount: finalTotal,
                         status: 'pending', // or 'paid'
-                        shipping_address: shippingDetails
+                        shipping_details: shippingDetails
                     }
                 ])
                 .select()
@@ -64,7 +64,7 @@ const Checkout = () => {
                     order_id: order.id,
                     product_id: item.id,
                     quantity: item.quantity || 1,
-                    price: item.price
+                    price_at_purchase: item.price
                 }));
 
                 const { error: itemsError } = await supabase
@@ -109,8 +109,8 @@ const Checkout = () => {
 
                         {/* Step 1: Shipping */}
                         <div className={`border rounded-2xl overflow-hidden transition-all ${currentStep === 1
-                                ? 'border-primary/50 bg-[#1e1e1e]/20'
-                                : 'border-white/10 bg-[#121212]'
+                            ? 'border-primary/50 bg-[#1e1e1e]/20'
+                            : 'border-white/10 bg-[#121212]'
                             }`}>
                             <div
                                 className="p-6 flex items-center justify-between cursor-pointer"
@@ -141,8 +141,8 @@ const Checkout = () => {
 
                         {/* Step 2: Payment */}
                         <div className={`border rounded-2xl overflow-hidden transition-all ${currentStep === 2
-                                ? 'border-primary/50 bg-[#1e1e1e]/20'
-                                : 'border-white/10 bg-[#121212]'
+                            ? 'border-primary/50 bg-[#1e1e1e]/20'
+                            : 'border-white/10 bg-[#121212]'
                             }`}>
                             <div className="p-6 flex items-center gap-4">
                                 <div className={`size-8 rounded-full flex items-center justify-center font-bold text-sm ${currentStep > 2 ? 'bg-green-500 text-white' : currentStep === 2 ? 'bg-primary text-white' : 'bg-white/10 text-[#a1a1aa]'

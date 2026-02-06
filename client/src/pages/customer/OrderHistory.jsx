@@ -35,7 +35,6 @@ const OrderHistory = () => {
                         price,
                         products (
                             title,
-                            image,
                             image_url
                         )
                     )

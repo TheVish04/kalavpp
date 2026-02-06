@@ -52,7 +52,6 @@ const DashboardHome = () => {
                         id,
                         product:products (
                             title,
-                            image,
                             image_url,
                             vertical
                         )

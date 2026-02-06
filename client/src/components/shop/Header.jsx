@@ -1,13 +1,22 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ resultCount, sort, setSort }) => {
     const [isSortOpen, setIsSortOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
+
+    const handleSearch = (e) => {
+        if (e.key === 'Enter') {
+            navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+        }
+    };
 
     return (
         <React.Fragment> {/* Using Fragment to avoid extra div wrapper if needed, but structure requires specific hierarchy */}
             {/* Top Navigation Bar */}
             <header className="h-20 flex items-center justify-between px-8 border-b border-white/5 bg-[#121212] z-50 relative">
-                <div className="flex items-center gap-4 text-white">
+                <div className="flex items-center gap-4 text-white cursor-pointer" onClick={() => navigate('/shop')}>
                     <div className="text-primary">
                         <span className="material-symbols-outlined text-4xl">pentagon</span>
                     </div>
@@ -24,6 +33,9 @@ const Header = ({ resultCount, sort, setSort }) => {
                             className="w-full bg-[#1E1E24] border-none rounded-full py-2.5 pl-12 pr-4 text-sm text-white placeholder-gray-500 focus:ring-2 focus:ring-primary focus:bg-[#25252c] transition-all"
                             placeholder="Search artists, artworks, collections..."
                             type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onKeyDown={handleSearch}
                         />
                     </div>
                 </div>

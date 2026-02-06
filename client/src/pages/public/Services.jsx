@@ -24,19 +24,13 @@ const Services = () => {
                 let query = supabase
                     .from('products')
                     .select('*, profiles(full_name, avatar_url, id)')
-                    //.eq('category', 'Service'); // Start with basic filter
-                    // To ensure we get results for testing even if data is scant, 
-                    // I will check if 'type' is 'SERVICE' or 'category' is 'Service'
-                    .or('category.eq.Service,type.eq.SERVICE');
+                    .eq('category', 'Service');
 
                 const { data, error } = await query;
 
                 if (error) throw error;
 
                 // Client-side filtering for specific service sub-types (Verticals)
-                // Assuming 'vertical' column holds things like 'Custom Portraits', 'Wall Murals' etc.
-                // OR 'category' holds the specific sub-category if 'type' is Service.
-                // Let's assume 'vertical' or 'category' might hold the sub-tag.
                 let filteredData = data || [];
 
                 if (activeCategory !== 'All Services') {

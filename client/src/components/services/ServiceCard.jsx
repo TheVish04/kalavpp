@@ -47,7 +47,7 @@ const ServiceCard = ({ service }) => {
                 <div className="flex justify-between items-start">
                     <div>
                         <h3 className="text-white font-bold text-lg leading-tight line-clamp-1">{service.title}</h3>
-                        <p className="text-xs text-gray-300 mt-1">{artistUsername || artistName}</p>
+                        <p className="text-xs text-gray-300 mt-1">{service.vertical || artistUsername || artistName}</p>
                     </div>
                 </div>
 

@@ -39,8 +39,8 @@ const CartItem = ({ item, onRemove, onUpdateQuantity }) => {
 
                 {/* Type Badge */}
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium uppercase tracking-wide border ${item.category === 'Digital'
-                        ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                        : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                    ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                     }`}>
                     {item.category || 'Physical'}
                 </span>
@@ -53,7 +53,6 @@ const CartItem = ({ item, onRemove, onUpdateQuantity }) => {
                     <button
                         onClick={() => onUpdateQuantity(item.id, (item.quantity || 1) - 1)}
                         className="w-6 h-6 flex items-center justify-center rounded-full text-[#a1a1aa] hover:text-white hover:bg-white/10 transition-colors"
-                        disabled={(item.quantity || 1) <= 1}
                     >
                         <span className="material-symbols-outlined text-[16px]">remove</span>
                     </button>

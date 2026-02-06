@@ -40,7 +40,7 @@ const Cart = () => {
                             to="/shop"
                             className="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-lg shadow-lg shadow-primary/25 transition-all"
                         >
-                            Browse Market
+                            Explore Market
                         </Link>
                     </div>
                 ) : (

@@ -390,7 +390,8 @@ const Auth = () => {
                     </div>
                 </div>
             </div>
-            );
+        </div>
+    );
 };
 
-            export default Auth;
+export default Auth;

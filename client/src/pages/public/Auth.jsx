@@ -12,6 +12,8 @@ const Auth = () => {
     const [role, setRole] = useState('customer'); // 'customer' or 'vendor'
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -22,24 +24,28 @@ const Auth = () => {
     };
 
     // Mock Login Helper
-    const fillMock = (mockEmail, mockPassword) => {
-        setEmail(mockEmail);
-        setPassword(mockPassword);
-    };
+
 
     // Handle Authentication
     const handleAuth = async (e) => {
         e.preventDefault();
+        console.log('handleAuth triggered', { mode, email: email.trim() }); // Debugging
+
+        if (loading) return; // Prevent double submission
         setLoading(true);
         setError(null);
 
         try {
             if (mode === 'signup') {
+                if (password !== confirmPassword) {
+                    throw new Error("Passwords do not match");
+                }
                 const { data, error } = await supabase.auth.signUp({
                     email: email.trim(),
                     password,
                     options: {
-                        data: { role: role }, // Critical: Storing role in metadata
+                        data: { role: role },
+                        emailRedirectTo: `${window.location.origin}/auth`, // Explicit redirect to prevent issues
                     },
                 });
                 if (error) throw error;
@@ -287,14 +293,46 @@ const Auth = () => {
                                     <span className="material-symbols-outlined">lock</span>
                                 </div>
                                 <input
-                                    className="w-full bg-[#1e1e1e]/50 border border-[#333] text-white text-sm rounded-full focus:ring-1 focus:ring-primary focus:border-primary block pl-12 p-4 placeholder-gray-500 transition-all outline-none"
+                                    className="w-full bg-[#1e1e1e]/50 border border-[#333] text-white text-sm rounded-full focus:ring-1 focus:ring-primary focus:border-primary block pl-12 pr-12 p-4 placeholder-gray-500 transition-all outline-none"
                                     placeholder="Password"
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500 hover:text-white transition-colors"
+                                >
+                                    <span className="material-symbols-outlined">
+                                        {showPassword ? 'visibility_off' : 'visibility'}
+                                    </span>
+                                </button>
                             </div>
+
+                            <AnimatePresence>
+                                {mode === 'signup' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="relative group overflow-hidden"
+                                    >
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-500 group-focus-within:text-primary transition-colors">
+                                            <span className="material-symbols-outlined">lock_reset</span>
+                                        </div>
+                                        <input
+                                            className="w-full bg-[#1e1e1e]/50 border border-[#333] text-white text-sm rounded-full focus:ring-1 focus:ring-primary focus:border-primary block pl-12 p-4 placeholder-gray-500 transition-all outline-none"
+                                            placeholder="Confirm Password"
+                                            type={showPassword ? "text" : "password"}
+                                            required
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                        />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
                             {mode === 'login' && (
                                 <div className="flex justify-end">
@@ -310,6 +348,7 @@ const Auth = () => {
                             <motion.button
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
+                                type="submit"
                                 disabled={loading}
                                 className="w-full bg-gradient-to-r from-primary to-secondary hover:bg-primary-dark text-white font-bold py-4 px-6 rounded-full shadow-[0_0_20px_rgba(140,37,244,0.3)] hover:shadow-[0_0_30px_rgba(140,37,244,0.5)] transition-all duration-300 transform mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
@@ -317,15 +356,7 @@ const Auth = () => {
                             </motion.button>
                         </form>
 
-                        {/* Mock Login Buttons (Dev Helper) */}
-                        <div className="mt-8">
-                            <div className="text-xs text-center text-gray-500 mb-2 font-bold uppercase tracking-wider">Mock Logins</div>
-                            <div className="flex gap-2 justify-center">
-                                <button onClick={() => fillMock('customer@gmail.com', '12345678')} className="text-[10px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1 rounded border border-white/10">Customer</button>
-                                <button onClick={() => fillMock('creator@gmail.com', '12345678')} className="text-[10px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1 rounded border border-white/10">Creator</button>
-                                <button onClick={() => fillMock('admin@gmail.com', '12345678')} className="text-[10px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1 rounded border border-white/10">Admin</button>
-                            </div>
-                        </div>
+
 
 
                         {/* Divider */}

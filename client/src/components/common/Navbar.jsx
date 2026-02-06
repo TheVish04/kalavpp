@@ -1,13 +1,36 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <nav className="fixed top-0 left-0 w-full z-50 glass-nav transition-all duration-300">
-            <div className="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
+        <motion.nav
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5 }}
+            className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'glass-nav h-16 shadow-lg' : 'bg-transparent h-20'
+                }`}
+        >
+            <div className="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between">
                 {/* Logo Section */}
                 <div className="flex items-center gap-12">
                     <Link to="/" className="flex items-center gap-3 text-white group">
-                        <div className="size-8 text-primary group-hover:text-accent transition-colors duration-300">
+                        <motion.div
+                            whileHover={{ rotate: 180 }}
+                            transition={{ duration: 0.5 }}
+                            className="size-8 text-primary group-hover:text-accent transition-colors duration-300"
+                        >
                             <svg
                                 className="w-full h-full"
                                 fill="none"
@@ -36,49 +59,35 @@ const Navbar = () => {
                                     strokeWidth="4"
                                 ></path>
                             </svg>
-                        </div>
+                        </motion.div>
                         <span className="text-xl font-bold tracking-tight">Kalavpp</span>
                     </Link>
 
                     {/* Desktop Links */}
                     <div className="hidden lg:flex items-center gap-8">
-                        <Link
-                            to="/shop"
-                            className="text-sm font-medium text-gray-300 hover:text-white hover:scale-105 transition-all"
-                        >
-                            Market
-                        </Link>
-                        <Link
-                            to="/services"
-                            className="text-sm font-medium text-gray-300 hover:text-white hover:scale-105 transition-all"
-                        >
-                            Commissions
-                        </Link>
-                        <Link
-                            to="/about"
-                            className="text-sm font-medium text-gray-300 hover:text-white hover:scale-105 transition-all"
-                        >
-                            About
-                        </Link>
-                        <Link
-                            to="/blog"
-                            className="text-sm font-medium text-gray-300 hover:text-white hover:scale-105 transition-all"
-                        >
-                            Blog
-                        </Link>
+                        {['Market', 'Commissions', 'About', 'Blog'].map((item) => (
+                            <Link
+                                key={item}
+                                to={item === 'Market' ? '/shop' : item === 'Commissions' ? '/services' : `/${item.toLowerCase()}`}
+                                className="relative text-sm font-medium text-gray-300 hover:text-white transition-colors group"
+                            >
+                                {item}
+                                <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                            </Link>
+                        ))}
                     </div>
                 </div>
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-6">
                     {/* Search Bar */}
-                    <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-full h-10 px-4 w-64 focus-within:border-primary/50 focus-within:bg-white/10 transition-all">
+                    <div className={`hidden md:flex items-center bg-white/5 border border-white/10 rounded-full px-4 w-64 focus-within:border-primary/50 focus-within:bg-white/10 transition-all ${scrolled ? 'h-9' : 'h-10'}`}>
                         <span className="material-symbols-outlined text-gray-400 text-[20px]">
                             search
                         </span>
                         <input
                             className="bg-transparent border-none text-sm text-white placeholder-gray-500 focus:ring-0 w-full h-full ml-2 outline-none"
-                            placeholder="Search creators, assets..."
+                            placeholder="Search..."
                             type="text"
                         />
                     </div>
@@ -90,16 +99,19 @@ const Navbar = () => {
                         >
                             Login
                         </Link>
-                        <Link
-                            to="/auth?mode=signup"
-                            className="flex items-center justify-center h-10 px-6 rounded-full bg-primary hover:bg-primary-dark text-white text-sm font-bold transition-all shadow-[0_0_15px_rgba(140,37,244,0.3)] hover:shadow-[0_0_25px_rgba(140,37,244,0.5)]"
-                        >
-                            Sign Up
+                        <Link to="/auth?mode=signup">
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className={`flex items-center justify-center px-6 rounded-full bg-primary hover:bg-primary-dark text-white text-sm font-bold transition-all shadow-[0_0_15px_rgba(140,37,244,0.3)] hover:shadow-[0_0_25px_rgba(140,37,244,0.5)] ${scrolled ? 'h-9' : 'h-10'}`}
+                            >
+                                Sign Up
+                            </motion.button>
                         </Link>
                     </div>
                 </div>
             </div>
-        </nav>
+        </motion.nav>
     );
 };
 

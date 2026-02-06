@@ -43,7 +43,7 @@ const OrderSummaryFooter = ({ order }) => {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <h4 className="text-white font-bold text-sm sm:text-base truncate mb-1">{product.title || 'Product'}</h4>
-                                    <p className="text-gray-500 text-xs sm:text-sm">ID: KV-LITE-{item.product_id?.slice(0, 4).toUpperCase()}</p>
+                                    <p className="text-gray-500 text-xs sm:text-sm">ID: KV-LITE-{String(item.product_id || '').slice(0, 4).toUpperCase()}</p>
                                     <p className="text-gray-500 text-xs sm:text-sm sm:hidden mt-1">Qty: {item.quantity || 1}</p>
                                 </div>
                                 <div className="hidden sm:block text-center w-20">

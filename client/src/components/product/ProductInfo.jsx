@@ -1,6 +1,43 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const AccordionItem = ({ title, children, defaultOpen = false }) => {
+    const [isOpen, setIsOpen] = useState(defaultOpen);
+
+    return (
+        <div className="border-b border-white/10 pb-4">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex w-full cursor-pointer items-center justify-between text-base font-bold text-white hover:text-primary transition-colors py-2"
+            >
+                {title}
+                <motion.span
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="material-symbols-outlined"
+                >
+                    expand_more
+                </motion.span>
+            </button>
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
+                    >
+                        <div className="pt-2 pb-2 text-base leading-relaxed text-white/70 font-body">
+                            {children}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
 
 const ProductInfo = ({ product, addToCart, buyNow }) => {
     const {
@@ -14,7 +51,7 @@ const ProductInfo = ({ product, addToCart, buyNow }) => {
         category
     } = product;
 
-    const artistName = profiles?.full_name || profiles?.username || 'Unknown Artist';
+    const artistName = profiles?.full_name || profiles?.username || 'Kalavpp Verified';
     const artistAvatar = profiles?.avatar_url || 'https://via.placeholder.com/150';
     const artistId = profiles?.id;
 
@@ -32,7 +69,6 @@ const ProductInfo = ({ product, addToCart, buyNow }) => {
             {/* Title */}
             <h1 className="text-4xl lg:text-5xl font-bold text-white leading-[1.1] mb-6 tracking-tight">
                 {title} <br />
-                {/* <span className="text-white/80 font-light">No. 5</span> */}
             </h1>
 
             {/* Artist Card */}
@@ -101,27 +137,15 @@ const ProductInfo = ({ product, addToCart, buyNow }) => {
                 </button>
             </div>
 
-            {/* Minimalist Accordions */}
+            {/* Minimalist Accordions with Framer Motion */}
             <div className="mt-auto space-y-2">
-                <details className="group border-b border-white/10 pb-4" open>
-                    <summary className="flex cursor-pointer items-center justify-between text-base font-bold text-white marker:content-none hover:text-primary transition-colors">
-                        Description
-                        <span className="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
-                    </summary>
-                    <div className="pt-4 text-base leading-relaxed text-white/70 font-body">
-                        <p>{description || 'No description available for this masterpiece.'}</p>
-                    </div>
-                </details>
-                <details className="group border-b border-white/10 pb-4">
-                    <summary className="flex cursor-pointer items-center justify-between text-base font-bold text-white marker:content-none hover:text-primary transition-colors">
-                        Shipping Policy
-                        <span className="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
-                    </summary>
-                    <div className="pt-4 text-base leading-relaxed text-white/70 font-body">
-                        <p>Ships within 3-5 business days in a custom-built wooden crate to ensure maximum protection. Includes a Certificate of Authenticity signed by the artist.</p>
-                        <p className="mt-2 text-sm text-white/50">Free worldwide shipping with insurance included.</p>
-                    </div>
-                </details>
+                <AccordionItem title="Description" defaultOpen={true}>
+                    <p>{description || 'No description available for this masterpiece.'}</p>
+                </AccordionItem>
+                <AccordionItem title="Shipping Policy">
+                    <p>Ships within 3-5 business days in a custom-built wooden crate to ensure maximum protection. Includes a Certificate of Authenticity signed by the artist.</p>
+                    <p className="mt-2 text-sm text-white/50">Free worldwide shipping with insurance included.</p>
+                </AccordionItem>
             </div>
         </section>
     );

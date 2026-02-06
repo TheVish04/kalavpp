@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../lib/supabase';
 
 const ProductCard = ({ product }) => {
     const navigate = useNavigate();
@@ -18,6 +19,15 @@ const ProductCard = ({ product }) => {
 
     const badge = getBadge();
 
+    // Helper to resolve image URL
+    const getImageUrl = (path) => {
+        if (!path) return 'https://via.placeholder.com/400';
+        if (path.startsWith('http')) return path;
+        return supabase.storage.from('products').getPublicUrl(path).data.publicUrl;
+    };
+
+    const imageUrl = getImageUrl(product.thumbnail || product.image);
+
     return (
         <div
             onClick={() => navigate(`/product/${product.id}`)}
@@ -25,7 +35,7 @@ const ProductCard = ({ product }) => {
         >
             <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url('${product.thumbnail || product.image || 'https://via.placeholder.com/400'}')` }}
+                style={{ backgroundImage: `url('${imageUrl}')` }}
             ></div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
 

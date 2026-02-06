@@ -75,25 +75,37 @@ const ProductDetails = () => {
         );
     }
 
-    // Prepare thumbnails (mocking multiple images if API only returns one)
-    // If your DB has an 'images' array column, use that. 
-    // Otherwise fallback to duplicates of the main image for the design effect
-    const thumbnails = product.images || [product.image, product.image, product.image];
+    // Helper to resolve image URL
+    const getImageUrl = (path) => {
+        if (!path) return 'https://via.placeholder.com/800x600?text=No+Image';
+        if (path.startsWith('http')) return path;
+        return supabase.storage.from('products').getPublicUrl(path).data.publicUrl;
+    };
+
+    const mainImageResolved = getImageUrl(product.image || product.thumbnail);
+
+    // Resolve thumbnails
+    // If product.images exists, map it. Else create fallback array using resolved main image
+    let thumbnailsResolved = [];
+    if (product.images && product.images.length > 0) {
+        thumbnailsResolved = product.images.map(img => getImageUrl(img));
+    } else {
+        thumbnailsResolved = [
+            mainImageResolved,
+            "https://via.placeholder.com/800x600?text=Detail",
+            "https://via.placeholder.com/800x600?text=Context"
+        ];
+    }
 
     return (
         <div className="flex flex-col min-h-screen bg-[#0a0a0a] text-white">
-            {/* Reusing the Shop Header for navigation consistency */}
-            {/* Note: The design had a slightly different header, but reusing standard header is usually better for app consistency unless specified otherwise.
-                However, to match the design EXACTLY as requested, I should use the header from the HTML snippet or custom one.
-                The HTML snippet header is simple. I'll stick with the reusable Header to ensure search/cart logic works.
-             */}
             <Header />
 
             {/* Immersive Split Layout */}
             <main className="flex-1 flex flex-col lg:flex-row h-auto lg:h-[calc(100vh-80px)]">
                 <ProductGallery
-                    mainImage={product.image || product.thumbnail}
-                    thumbnails={product.images ? product.images : [product.image, "https://via.placeholder.com/800x600?text=Detail", "https://via.placeholder.com/800x600?text=Context"]}
+                    mainImage={mainImageResolved}
+                    thumbnails={thumbnailsResolved}
                 />
 
                 <ProductInfo

@@ -3,9 +3,11 @@ import React from 'react';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 
 const Header = ({ resultCount, sort, setSort }) => {
     const { user } = useAuth();
+    const { cartCount } = useCart();
     const [isSortOpen, setIsSortOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
@@ -63,7 +65,7 @@ const Header = ({ resultCount, sort, setSort }) => {
                             <Link to="/cart">
                                 <button className="flex items-center gap-2 bg-[#1E1E24] hover:bg-primary/20 text-white px-4 py-2 rounded-full transition-all border border-white/5">
                                     <span className="material-symbols-outlined text-[20px]">shopping_cart</span>
-                                    <span className="text-sm font-bold">2</span>
+                                    <span className="text-sm font-bold">{cartCount}</span>
                                 </button>
                             </Link>
                             <div

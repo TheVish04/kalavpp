@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { useCart } from '../../context/CartContext';
 
 const ProductCard = ({ product }) => {
     const navigate = useNavigate();
+    const { addToCart } = useCart();
 
     // Determine badge color/text based on vertical/type
     const getBadge = () => {
@@ -56,7 +58,7 @@ const ProductCard = ({ product }) => {
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
-                        // Add to cart logic here
+                        addToCart(product);
                     }}
                     className="h-12 w-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all shadow-lg"
                 >

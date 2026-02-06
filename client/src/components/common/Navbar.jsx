@@ -3,9 +3,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 
 const Navbar = () => {
     const { user, signOut } = useAuth();
+    const { cartCount } = useCart();
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -113,8 +115,13 @@ const Navbar = () => {
                                     Dashboard
                                 </Link>
                                 <Link to="/cart">
-                                    <button className="flex items-center justify-center size-10 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all border border-white/10">
+                                    <button className="relative flex items-center justify-center size-10 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all border border-white/10">
                                         <span className="material-symbols-outlined text-xl">shopping_cart</span>
+                                        {cartCount > 0 && (
+                                            <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#121212]">
+                                                {cartCount}
+                                            </span>
+                                        )}
                                     </button>
                                 </Link>
                                 <button

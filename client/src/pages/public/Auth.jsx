@@ -36,7 +36,7 @@ const Auth = () => {
         try {
             if (mode === 'signup') {
                 const { data, error } = await supabase.auth.signUp({
-                    email,
+                    email: email.trim(),
                     password,
                     options: {
                         data: { role: role }, // Critical: Storing role in metadata
@@ -52,7 +52,7 @@ const Auth = () => {
 
             } else {
                 const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
+                    email: email.trim(),
                     password,
                 });
                 if (error) throw error;

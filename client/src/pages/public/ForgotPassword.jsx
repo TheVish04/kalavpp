@@ -30,7 +30,7 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="font-display bg-[#f7f5f8] dark:bg-[#121212] text-slate-900 dark:text-white min-h-screen flex flex-col overflow-hidden relative selection:bg-[#8c25f4] selection:text-white">
+        <div className="font-display bg-[#121212] text-white min-h-screen flex flex-col overflow-hidden relative selection:bg-[#8c25f4] selection:text-white">
             {/* Top Navigation */}
             <header className="absolute top-0 w-full z-20 flex items-center justify-between px-8 py-6">
                 <div className="flex items-center gap-3">

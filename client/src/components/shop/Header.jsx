@@ -120,5 +120,4 @@ export const ShopControls = ({ count, sort, setSort }) => {
     );
 };
 
-import React from 'react';
 export default Header;

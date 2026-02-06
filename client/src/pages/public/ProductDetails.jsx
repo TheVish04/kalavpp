@@ -24,7 +24,7 @@ const ProductDetails = () => {
                 // Fetch the product data joined with the profiles table
                 const { data, error } = await supabase
                     .from('products')
-                    .select('*, profiles(full_name, avatar_url, id, username)')
+                    .select('*, profiles(full_name, avatar_url, id)')
                     .eq('id', id)
                     .single();
 

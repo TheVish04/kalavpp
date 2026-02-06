@@ -70,8 +70,8 @@ function App() {
             {/* Vendor Routes */}
             <Route path="/vendor/dashboard" element={<VendorDashboard />} />
             <Route path="/vendor/products" element={<ProductManager />} />
-            <Route path="/vendor/product/add" element={<AddEditProduct />} />
-            <Route path="/vendor/product/edit/:id" element={<AddEditProduct />} />
+            <Route path="/vendor/add-product" element={<AddEditProduct />} />
+            <Route path="/vendor/edit-product/:id" element={<AddEditProduct />} />
             <Route path="/vendor/services" element={<ServiceManager />} />
             <Route path="/vendor/orders" element={<VendorOrders />} />
             <Route path="/vendor/wallet" element={<Wallet />} />

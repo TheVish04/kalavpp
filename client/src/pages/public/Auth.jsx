@@ -71,10 +71,10 @@ const Auth = () => {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row min-h-screen w-full bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white overflow-hidden">
+        <div className="flex flex-col lg:flex-row h-screen w-full bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white overflow-hidden">
             {/* Left Side: Immersive Visual */}
             <div
-                className="relative hidden lg:flex lg:w-1/2 bg-cover bg-center items-end p-12 overflow-hidden group"
+                className="relative hidden lg:flex lg:w-1/2 h-full bg-cover bg-center items-end p-12 overflow-hidden group"
                 style={{
                     backgroundImage:
                         "url('https://lh3.googleusercontent.com/aida-public/AB6AXuALEUIjQ22gxUgESIV7kGKG34yb6wiY6RZ8tZUxj1kDq9ZDF5Com0iQihRPfFrxy4_Mlr1w0rV6UMIJSXsH5vWOziI7F5smb4dVyYXtyBY7FyYh1hH5O9elSJwGoNa8ijWlEPVfhP-zba4HgKSGMNDVuFBBMFi76pZj4DewsJi7bUmOtRXibowlJx87yLU095aANC2HlBIdWSM-WMlv0EBKcwRbzJKB3m3934W-xbnCowT8URdwqDQOUbvJWPJy9U0_fd-TwjmfZ3Q')",
@@ -134,7 +134,7 @@ const Auth = () => {
             </div>
 
             {/* Right Side: Functional Form */}
-            <div className="flex-1 flex flex-col justify-center items-center p-6 lg:p-12 relative bg-[#121212] lg:bg-transparent">
+            <div className="flex-1 flex flex-col justify-center items-center p-6 lg:p-12 relative bg-[#121212] lg:bg-transparent h-full overflow-y-auto custom-scrollbar">
                 {/* Mobile Background Image */}
                 <div
                     className="absolute inset-0 z-0 lg:hidden opacity-20 bg-cover bg-center"
@@ -175,8 +175,8 @@ const Auth = () => {
                             <button
                                 onClick={() => toggleMode('signup')}
                                 className={`flex-1 relative z-10 py-2.5 px-6 rounded-full text-sm font-semibold transition-all duration-300 ${mode === 'signup'
-                                        ? 'text-white'
-                                        : 'text-gray-400 hover:text-white'
+                                    ? 'text-white'
+                                    : 'text-gray-400 hover:text-white'
                                     }`}
                             >
                                 Sign Up
@@ -215,14 +215,14 @@ const Auth = () => {
                                 <div
                                     onClick={() => setRole('customer')}
                                     className={`cursor-pointer glass-panel rounded-2xl p-4 transition-all duration-300 border flex flex-col items-center text-center h-full hover:scale-105 ${role === 'customer'
-                                            ? 'border-primary bg-primary/10'
-                                            : 'border-transparent hover:border-gray-700'
+                                        ? 'border-primary bg-primary/10'
+                                        : 'border-transparent hover:border-gray-700'
                                         }`}
                                 >
                                     <div
                                         className={`size-10 rounded-full flex items-center justify-center mb-3 transition-colors duration-300 ${role === 'customer'
-                                                ? 'bg-primary text-white'
-                                                : 'bg-[#2a2a2a] text-gray-400'
+                                            ? 'bg-primary text-white'
+                                            : 'bg-[#2a2a2a] text-gray-400'
                                             }`}
                                     >
                                         <span className="material-symbols-outlined text-xl">
@@ -238,14 +238,14 @@ const Auth = () => {
                                 <div
                                     onClick={() => setRole('vendor')}
                                     className={`cursor-pointer glass-panel rounded-2xl p-4 transition-all duration-300 border flex flex-col items-center text-center h-full hover:scale-105 ${role === 'vendor'
-                                            ? 'border-primary bg-primary/10'
-                                            : 'border-transparent hover:border-gray-700'
+                                        ? 'border-primary bg-primary/10'
+                                        : 'border-transparent hover:border-gray-700'
                                         }`}
                                 >
                                     <div
                                         className={`size-10 rounded-full flex items-center justify-center mb-3 transition-colors duration-300 ${role === 'vendor'
-                                                ? 'bg-primary text-white'
-                                                : 'bg-[#2a2a2a] text-gray-400'
+                                            ? 'bg-primary text-white'
+                                            : 'bg-[#2a2a2a] text-gray-400'
                                             }`}
                                     >
                                         <span className="material-symbols-outlined text-xl">brush</span>

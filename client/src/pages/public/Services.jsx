@@ -23,7 +23,7 @@ const Services = () => {
 
                 let query = supabase
                     .from('products')
-                    .select('*, profiles(full_name, avatar_url, id, username)')
+                    .select('*, profiles(full_name, avatar_url, id)')
                     //.eq('category', 'Service'); // Start with basic filter
                     // To ensure we get results for testing even if data is scant, 
                     // I will check if 'type' is 'SERVICE' or 'category' is 'Service'

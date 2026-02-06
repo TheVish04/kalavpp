@@ -74,7 +74,7 @@ function App() {
             <Route path="/vendor/edit-product/:id" element={<AddEditProduct />} />
             <Route path="/vendor/commissions" element={<ServiceManager />} />
             <Route path="/vendor/orders" element={<VendorOrders />} />
-            <Route path="/vendor/wallet" element={<Wallet />} />
+            <Route path="/vendor/payouts" element={<Wallet />} />
 
             {/* Admin Routes */}
             <Route path="/admin/dashboard" element={<AdminDashboard />} />

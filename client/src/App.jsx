@@ -72,7 +72,7 @@ function App() {
             <Route path="/vendor/products" element={<ProductManager />} />
             <Route path="/vendor/add-product" element={<AddEditProduct />} />
             <Route path="/vendor/edit-product/:id" element={<AddEditProduct />} />
-            <Route path="/vendor/services" element={<ServiceManager />} />
+            <Route path="/vendor/commissions" element={<ServiceManager />} />
             <Route path="/vendor/orders" element={<VendorOrders />} />
             <Route path="/vendor/wallet" element={<Wallet />} />
 

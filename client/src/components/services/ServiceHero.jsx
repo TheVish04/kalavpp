@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 
 const ServiceHero = ({ service }) => {
@@ -12,6 +13,7 @@ const ServiceHero = ({ service }) => {
     const imageUrl = getImageUrl(service.image);
     const artistName = service.profiles?.full_name || 'Kalavpp Artist';
     const artistAvatar = service.profiles?.avatar_url || 'https://via.placeholder.com/150';
+    const artistId = service.profiles?.id;
 
     return (
         <div className="flex-1 min-w-0 flex flex-col gap-10">
@@ -52,7 +54,9 @@ const ServiceHero = ({ service }) => {
                 </div>
                 <div className="flex-1 text-center sm:text-left space-y-2">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 justify-center sm:justify-start">
-                        <h3 className="text-2xl font-bold text-white">{artistName}</h3>
+                        <Link to={`/artist/${artistId}`} className="hover:underline hover:text-primary transition-colors">
+                            <h3 className="text-2xl font-bold text-white">{artistName}</h3>
+                        </Link>
                         <span className="hidden sm:block text-white/20">•</span>
                         <div className="flex items-center gap-1 text-yellow-400 justify-center sm:justify-start">
                             <span className="material-symbols-outlined text-[18px] fill-current">star</span>
@@ -60,9 +64,20 @@ const ServiceHero = ({ service }) => {
                         </div>
                     </div>
                     <p className="text-[#ab9cba] text-sm">Specializing in large-scale murals and abstract expressionism. Turning walls into windows since 2015.</p>
-                    <div className="inline-flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                        <span className="material-symbols-outlined text-primary text-[16px]">bolt</span>
-                        <span className="text-xs font-bold text-primary tracking-wide">Response Time: &lt; 24 hrs</span>
+                    <div className="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
+                        <div className="inline-flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+                            <span className="material-symbols-outlined text-primary text-[16px]">bolt</span>
+                            <span className="text-xs font-bold text-primary tracking-wide">Response Time: &lt; 24 hrs</span>
+                        </div>
+                        {artistId && (
+                            <Link
+                                to={`/artist/${artistId}`}
+                                className="inline-flex items-center gap-1 bg-white/5 hover:bg-white/10 px-3 py-1 rounded-full border border-white/10 transition-colors"
+                            >
+                                <span className="text-xs font-bold text-white tracking-wide">View Profile</span>
+                                <span className="material-symbols-outlined text-[14px] text-white">arrow_forward</span>
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>

@@ -31,7 +31,6 @@ const OrderDetails = () => {
                         *,
                         products (
                             title,
-                            thumbnail,
                             image,
                             image_url
                         )

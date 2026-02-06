@@ -78,7 +78,14 @@ const DashboardSidebar = () => {
             {/* Logout */}
             <div className="p-4 mt-auto border-t border-white/5">
                 <button
-                    onClick={() => signOut()}
+                    onClick={async () => {
+                        try {
+                            await signOut();
+                            window.location.href = '/login';
+                        } catch (error) {
+                            console.error('Logout failed:', error);
+                        }
+                    }}
                     className="flex w-full items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 transition-colors text-red-400 hover:text-red-300 group"
                 >
                     <LogOut size={20} />

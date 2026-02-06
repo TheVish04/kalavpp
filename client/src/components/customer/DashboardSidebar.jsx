@@ -81,7 +81,7 @@ const DashboardSidebar = () => {
                     onClick={async () => {
                         try {
                             await signOut();
-                            window.location.href = '/login';
+                            window.location.href = '/auth';
                         } catch (error) {
                             console.error('Logout failed:', error);
                         }

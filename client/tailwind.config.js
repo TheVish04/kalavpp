@@ -11,6 +11,7 @@ export default {
                 'background-dark': '#121212', // Deep Charcoal
                 'surface-dark': '#1E1E1E',
                 'surface-glass': 'rgba(30, 30, 30, 0.4)',
+                'background-light': '#f7f5f8',
             },
             fontFamily: {
                 display: ['Manrope', 'sans-serif'],

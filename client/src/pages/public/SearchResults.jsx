@@ -34,11 +34,11 @@ const SearchResults = () => {
             setLoading(true);
             try {
                 // 1. Fetch Products
-                // We'll filter products by title or description
+                // Filter products by title or description using .or() syntax for inclusive search
                 let productQuery = supabase
                     .from('products')
-                    .select('*, profiles:owner_id(*)') // Assuming 'owner_id' links to profiles and we want artist info
-                    .ilike('title', `%${query}%`);
+                    .select('*') // Simplified selection to match Shop.jsx and avoid relation errors
+                    .or(`title.ilike.%${query}%,description.ilike.%${query}%`); // Search in both title and description
 
                 // 2. Fetch Creators (Profiles) if needed (for All Results or Creators tab)
                 let creatorQuery = supabase

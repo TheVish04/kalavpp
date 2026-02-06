@@ -1,7 +1,11 @@
+
+import React from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Header = ({ resultCount, sort, setSort }) => {
+    const { user } = useAuth();
     const [isSortOpen, setIsSortOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
@@ -16,11 +20,20 @@ const Header = ({ resultCount, sort, setSort }) => {
         <React.Fragment> {/* Using Fragment to avoid extra div wrapper if needed, but structure requires specific hierarchy */}
             {/* Top Navigation Bar */}
             <header className="h-20 flex items-center justify-between px-8 border-b border-white/5 bg-[#121212] z-50 relative">
-                <div className="flex items-center gap-4 text-white cursor-pointer" onClick={() => navigate('/shop')}>
-                    <div className="text-primary">
-                        <span className="material-symbols-outlined text-4xl">pentagon</span>
+                {/* Logo & Main Nav */}
+                <div className="flex items-center gap-12">
+                    <div className="flex items-center gap-4 text-white cursor-pointer" onClick={() => navigate('/shop')}>
+                        <div className="text-primary">
+                            <span className="material-symbols-outlined text-4xl">pentagon</span>
+                        </div>
+                        <h1 className="text-2xl font-bold tracking-tight">Kalavpp</h1>
                     </div>
-                    <h1 className="text-2xl font-bold tracking-tight">Kalavpp</h1>
+
+                    {/* Nav Links - Added as requested */}
+                    <nav className="hidden lg:flex items-center gap-6">
+                        <Link to="/shop" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Marketplace</Link>
+                        <Link to="/services" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Services</Link>
+                    </nav>
                 </div>
 
                 {/* Search Bar */}
@@ -41,18 +54,36 @@ const Header = ({ resultCount, sort, setSort }) => {
                 </div>
 
                 <div className="flex items-center gap-6">
-                    <button className="text-gray-400 hover:text-white transition-colors relative">
-                        <span className="material-symbols-outlined">notifications</span>
-                        <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full"></span>
-                    </button>
-                    <button className="flex items-center gap-2 bg-[#1E1E24] hover:bg-primary/20 text-white px-4 py-2 rounded-full transition-all border border-white/5">
-                        <span className="material-symbols-outlined text-[20px]">shopping_cart</span>
-                        <span className="text-sm font-bold">2</span>
-                    </button>
-                    <div
-                        className="h-10 w-10 rounded-full bg-cover bg-center border-2 border-primary/30"
-                        style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCK-LCKokphbApqUjf7ns1I6b3SYt7XUskTQGLphfjkdxFbWPOmox7D5Yc1Q9gXJ_bpOM9g5wYvAk_ocXVzwvl2Txggup0faylmK--MO3BFQz95X5WbqeEkXa86iMj7sgLfNgMReqQCSMma5vxv-6nNZkfPG-KP4uNqJ-7zHALSGFbv2UKNcaeah_j3MQAIm5eGY1woN4LtbRwWO8py2kJDrJpdiX8yFayKhkTHou7ZiVYiy4oXYGABUxwOAFeQ51k--jP_6QSe3uI')" }}
-                    ></div>
+                    {user ? (
+                        <>
+                            <button className="text-gray-400 hover:text-white transition-colors relative">
+                                <span className="material-symbols-outlined">notifications</span>
+                                <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full"></span>
+                            </button>
+                            <Link to="/cart">
+                                <button className="flex items-center gap-2 bg-[#1E1E24] hover:bg-primary/20 text-white px-4 py-2 rounded-full transition-all border border-white/5">
+                                    <span className="material-symbols-outlined text-[20px]">shopping_cart</span>
+                                    <span className="text-sm font-bold">2</span>
+                                </button>
+                            </Link>
+                            <div
+                                className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold border-2 border-primary/30 cursor-pointer"
+                                onClick={() => navigate('/dashboard')}
+                                title="Go to Dashboard"
+                            >
+                                {user.email?.charAt(0).toUpperCase()}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="flex items-center gap-4">
+                            <Link to="/auth" className="text-sm font-bold text-white hover:text-primary transition-colors">
+                                Login
+                            </Link>
+                            <Link to="/auth?mode=signup" className="px-5 py-2 rounded-full bg-primary hover:bg-primary-dark text-white text-sm font-bold transition-all shadow-[0_0_15px_rgba(140,37,244,0.3)]">
+                                Sign Up
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </header>
         </React.Fragment>

@@ -2,7 +2,10 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { useAuth } from '../../context/AuthContext';
+
 const Navbar = () => {
+    const { user, signOut } = useAuth();
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -13,6 +16,14 @@ const Navbar = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    const handleSignOut = async () => {
+        try {
+            await signOut();
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+    };
 
     return (
         <motion.nav
@@ -65,10 +76,10 @@ const Navbar = () => {
 
                     {/* Desktop Links */}
                     <div className="hidden lg:flex items-center gap-8">
-                        {['Market', 'Commissions', 'About', 'Blog'].map((item) => (
+                        {['Market', 'Services', 'About', 'Blog'].map((item) => (
                             <Link
                                 key={item}
-                                to={item === 'Market' ? '/shop' : item === 'Commissions' ? '/services' : `/${item.toLowerCase()}`}
+                                to={item === 'Market' ? '/shop' : item === 'Services' ? '/services' : `/${item.toLowerCase()}`}
                                 className="relative text-sm font-medium text-gray-300 hover:text-white transition-colors group"
                             >
                                 {item}
@@ -93,21 +104,48 @@ const Navbar = () => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Link
-                            to="/auth"
-                            className="hidden sm:flex items-center justify-center text-sm font-bold text-white hover:text-primary transition-colors px-4 h-10"
-                        >
-                            Login
-                        </Link>
-                        <Link to="/auth?mode=signup">
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className={`flex items-center justify-center px-6 rounded-full bg-primary hover:bg-primary-dark text-white text-sm font-bold transition-all shadow-[0_0_15px_rgba(140,37,244,0.3)] hover:shadow-[0_0_25px_rgba(140,37,244,0.5)] ${scrolled ? 'h-9' : 'h-10'}`}
-                            >
-                                Sign Up
-                            </motion.button>
-                        </Link>
+                        {user ? (
+                            <>
+                                <Link
+                                    to="/dashboard"
+                                    className="hidden sm:flex items-center justify-center text-sm font-bold text-white hover:text-primary transition-colors px-4 h-10"
+                                >
+                                    Dashboard
+                                </Link>
+                                <Link to="/cart">
+                                    <button className="flex items-center justify-center size-10 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all border border-white/10">
+                                        <span className="material-symbols-outlined text-xl">shopping_cart</span>
+                                    </button>
+                                </Link>
+                                <button
+                                    onClick={handleSignOut}
+                                    className={`flex items-center justify-center px-6 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm font-bold transition-all border border-white/10 ${scrolled ? 'h-9' : 'h-10'}`}
+                                >
+                                    Log Out
+                                </button>
+                                <div className="h-9 w-9 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold border border-primary/30">
+                                    {user.email?.charAt(0).toUpperCase()}
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/auth"
+                                    className="hidden sm:flex items-center justify-center text-sm font-bold text-white hover:text-primary transition-colors px-4 h-10"
+                                >
+                                    Login
+                                </Link>
+                                <Link to="/auth?mode=signup">
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className={`flex items-center justify-center px-6 rounded-full bg-primary hover:bg-primary-dark text-white text-sm font-bold transition-all shadow-[0_0_15px_rgba(140,37,244,0.3)] hover:shadow-[0_0_25px_rgba(140,37,244,0.5)] ${scrolled ? 'h-9' : 'h-10'}`}
+                                    >
+                                        Sign Up
+                                    </motion.button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

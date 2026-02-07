@@ -84,13 +84,17 @@ const Auth = () => {
                 if (error) throw error;
 
                 // 2. Fetch Profile to get Role
+                // We check both the DB profile and the auth metadata to ensure we catch the role.
                 const { data: profile } = await supabase
                     .from('profiles')
                     .select('role')
                     .eq('id', data.user.id)
-                    .single();
+                    .maybeSingle();
 
-                const role = profile?.role || 'customer';
+                // Priority: DB Profile -> Auth Metadata -> Default 'customer'
+                const role = profile?.role || data.user?.user_metadata?.role || 'customer';
+
+                console.log('Login Role Detected:', role);
 
                 // 3. Redirect Logic
                 if (role === 'admin') navigate('/admin/dashboard');

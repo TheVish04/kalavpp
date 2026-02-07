@@ -28,7 +28,7 @@ const Header = ({ resultCount, sort, setSort }) => {
                         <div className="text-primary">
                             <span className="material-symbols-outlined text-4xl">pentagon</span>
                         </div>
-                        <h1 className="text-2xl font-bold tracking-tight">Kalavpp</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">KalaVPP</h1>
                     </div>
 
                     {/* Nav Links - Added as requested */}

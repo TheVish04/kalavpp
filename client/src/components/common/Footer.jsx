@@ -46,7 +46,7 @@ const Footer = () => {
                                     ></path>
                                 </svg>
                             </div>
-                            <span className="text-lg font-bold">Kalavpp</span>
+                            <span className="text-lg font-bold">KalaVPP</span>
                         </Link>
                         <p className="text-gray-500 text-sm mb-6">
                             Empowering creators and collectors in the digital renaissance.
@@ -139,7 +139,7 @@ const Footer = () => {
                     variants={itemVariants}
                     className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600"
                 >
-                    <p>© 2024 Kalavpp Inc. All rights reserved.</p>
+                    <p>© 2024 KalaVPP Inc. All rights reserved.</p>
                     <div className="flex gap-6 mt-4 md:mt-0">
                         <Link to="/privacy" className="hover:text-gray-400">
                             Privacy Policy

@@ -73,7 +73,7 @@ const Navbar = () => {
                                 ></path>
                             </svg>
                         </motion.div>
-                        <span className="text-xl font-bold tracking-tight">Kalavpp</span>
+                        <span className="text-xl font-bold tracking-tight">KalaVPP</span>
                     </Link>
 
                     {/* Desktop Links */}

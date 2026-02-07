@@ -11,7 +11,7 @@ const ServiceHero = ({ service }) => {
     };
 
     const imageUrl = getImageUrl(service.image);
-    const artistName = service.profiles?.full_name || 'Kalavpp Artist';
+    const artistName = service.profiles?.full_name || 'KalaVPP Artist';
     const artistAvatar = service.profiles?.avatar_url || 'https://via.placeholder.com/150';
     const artistId = service.profiles?.id;
 

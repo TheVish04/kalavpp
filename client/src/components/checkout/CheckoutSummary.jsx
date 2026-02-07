@@ -31,7 +31,7 @@ const CheckoutSummary = () => {
                             <p className="text-xs text-[#a1a1aa] truncate">@{item.profiles?.full_name || 'Artist'}</p>
                             <div className="flex justify-between items-center mt-1">
                                 <span className="text-xs text-[#a1a1aa]">Qty: {item.quantity}</span>
-                                <span className="text-sm font-medium text-white">${(item.price * item.quantity).toFixed(2)}</span>
+                                <span className="text-sm font-medium text-white">₹{(item.price * item.quantity).toFixed(2)}</span>
                             </div>
                         </div>
                     </div>
@@ -43,17 +43,17 @@ const CheckoutSummary = () => {
             <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-[#a1a1aa] text-sm">
                     <span>Subtotal</span>
-                    <span className="text-white font-medium">${cartTotal.toFixed(2)}</span>
+                    <span className="text-white font-medium">₹{cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-[#a1a1aa] text-sm">
                     <span>Shipping</span>
                     <span className={shipping === 0 ? "text-green-400 font-bold" : "text-white font-medium"}>
-                        {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                        {shipping === 0 ? "Free" : `₹${shipping.toFixed(2)}`}
                     </span>
                 </div>
                 <div className="flex justify-between text-[#a1a1aa] text-sm">
                     <span>Estimated Tax (8%)</span>
-                    <span className="text-white font-medium">${tax.toFixed(2)}</span>
+                    <span className="text-white font-medium">₹{tax.toFixed(2)}</span>
                 </div>
             </div>
 
@@ -61,7 +61,7 @@ const CheckoutSummary = () => {
 
             <div className="flex justify-between items-center">
                 <span className="text-lg font-bold text-white">Total</span>
-                <span className="text-2xl font-bold text-white">${total.toFixed(2)}</span>
+                <span className="text-2xl font-bold text-white">₹{total.toFixed(2)}</span>
             </div>
 
             <div className="mt-8 flex items-center justify-center gap-2 text-[#a1a1aa] text-xs">

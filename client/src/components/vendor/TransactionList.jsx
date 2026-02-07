@@ -64,13 +64,13 @@ const TransactionList = ({ transactions }) => {
 
                                         <td className={`px-6 py-4 text-right text-sm font-bold whitespace-nowrap ${isPositive ? 'text-green-400' : 'text-white'
                                             }`}>
-                                            {isPositive ? '+' : ''} {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(t.amount)}
+                                            {isPositive ? '+' : ''} {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(t.amount)}
                                         </td>
 
                                         <td className="px-6 py-4 text-right">
                                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${t.status === 'CLEARED' || t.status === 'COMPLETED'
-                                                    ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                                                    : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
+                                                ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                                                : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
                                                 }`}>
                                                 {t.status === 'CLEARED' ? 'Cleared' : t.status === 'COMPLETED' ? 'Completed' : 'Pending'}
                                             </span>

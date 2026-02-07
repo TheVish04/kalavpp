@@ -14,7 +14,7 @@ const ServiceCard = ({ service }) => {
     };
 
     const imageUrl = getImageUrl(service.thumbnail || service.image);
-    const artistName = service.profiles?.full_name || 'Kalavpp Artist';
+    const artistName = service.profiles?.full_name || 'KalaVPP Artist';
     const artistAvatar = service.profiles?.avatar_url || 'https://via.placeholder.com/150';
     const artistUsername = service.profiles?.username ? `@${service.profiles.username}` : '';
     const price = service.price ? service.price.toFixed(0) : '0';
@@ -55,7 +55,7 @@ const ServiceCard = ({ service }) => {
 
                 <div className="flex items-end justify-between">
                     <div className="flex flex-col">
-                        <span className="text-primary font-bold text-base">Starts at ${price}</span>
+                        <span className="text-primary font-bold text-base">Starts at ₹{price}</span>
                         <div className="flex items-center gap-1 mt-0.5">
                             <span className="material-symbols-outlined text-amber-400 text-[18px] fill-current">star</span>
                             <span className="text-sm font-medium text-amber-400">{rating}</span>

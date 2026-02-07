@@ -194,7 +194,7 @@ const Auth = () => {
                                     diamond
                                 </span>
                                 <span className="text-2xl font-bold text-white tracking-wide">
-                                    Kalavpp
+                                    KalaVPP
                                 </span>
                             </div>
 
@@ -443,7 +443,7 @@ const Auth = () => {
                         {/* Footer */}
                         <div className="mt-8 text-center">
                             <p className="text-xs text-gray-600">
-                                By continuing, you agree to Kalavpp's{' '}
+                                By continuing, you agree to KalaVPP's{' '}
                                 <a
                                     className="text-gray-400 hover:text-white underline decoration-1 underline-offset-2"
                                     href="#"

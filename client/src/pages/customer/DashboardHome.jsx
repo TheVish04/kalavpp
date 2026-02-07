@@ -145,7 +145,7 @@ const DashboardHome = () => {
                         />
                         <StatCard
                             title="Wallet Balance"
-                            value={`$${stats.walletBalance.toFixed(2)}`}
+                            value={`₹${stats.walletBalance.toFixed(2)}`}
                             icon={Wallet}
                             colorClass="text-primary"
                             bgClass="bg-primary/20"

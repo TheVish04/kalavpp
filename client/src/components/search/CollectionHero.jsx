@@ -7,7 +7,7 @@ const CollectionHero = ({ title, description, query }) => {
 
     // Dynamic Content based on query
     const displayTitle = query ? `Results for '${query}'` : "Explore All Collections";
-    const displayDesc = description || (query ? `Browsing matches for "${query}"` : "Discover the most unique art and artists on Kalavpp.");
+    const displayDesc = description || (query ? `Browsing matches for "${query}"` : "Discover the most unique art and artists on KalaVPP.");
 
     // Specific Cyberpunk Data
     const cyberpunkData = {

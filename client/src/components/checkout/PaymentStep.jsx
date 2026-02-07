@@ -107,7 +107,7 @@ const PaymentStep = ({ onBack, onSubmit, loading, total }) => {
                         <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
                     ) : (
                         <>
-                            Pay ${total.toFixed(2)}
+                            Pay ₹{total.toFixed(2)}
                             <span className="material-symbols-outlined">lock</span>
                         </>
                     )}

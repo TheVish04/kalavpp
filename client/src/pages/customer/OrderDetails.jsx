@@ -128,7 +128,7 @@ const OrderDetails = () => {
                     <OrderSummaryFooter order={order} />
 
                     <div className="mt-8 text-center sm:text-left text-xs text-gray-500">
-                        <p>Need to return an item? <a href="#" className="text-white hover:underline">View our Return Policy</a>. Questions? Email us at <span className="text-white">support@kalavpp.com</span></p>
+                        <p>Need to return an item? <a href="#" className="text-white hover:underline">View our Return Policy</a>. Questions? Email us at <span className="text-white">support@KalaVPP.com</span></p>
                     </div>
                 </div>
 

@@ -121,7 +121,7 @@ const ArtistProfile = () => {
                                         <p className="mb-6 text-[#d1d1d1]">Limited edition holographic print. Only 50 copies available worldwide. Signed and numbered by {profile.full_name?.split(' ')[0] || 'Artist'}.</p>
                                         <div className="flex items-center gap-4">
                                             <button className="bg-white text-black hover:bg-gray-200 font-bold px-6 py-3 rounded-lg flex items-center gap-2 transition-colors">
-                                                Buy Now <span className="text-primary font-black">$80.00</span>
+                                                Buy Now <span className="text-primary font-black">₹80.00</span>
                                             </button>
                                             <button className="text-white hover:text-primary transition-colors flex items-center gap-2 text-sm font-semibold">
                                                 View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>

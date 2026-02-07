@@ -47,7 +47,7 @@ const Landing = () => {
         {
             id: 3,
             title: 'Marble Bust v2',
-            price: '$1,200',
+            price: '₹1,200',
             image:
                 'https://lh3.googleusercontent.com/aida-public/AB6AXuARTvgxbpRTMlh_yVyZSaGz1fx_ww-5KNa6M4mC6gPccY2FZHtZ9dwWgIcrfGkdSxcYncGwTKbgj4yT5n2VDE9uiW8bwcom-rrf6GlohDWukTZgK4yuVCVTGGKaOaRq2yahEouZZ2YwTMBmrSvK3-a4pBe812Z9D-NN6nMpZ4vYqQ8rBzRznUBL8KWzPopUiLT271oOkJ-UBodxedxhJT5FKZpbr3wcmnfqBtbo_8PZBIm77NqvIQ5y9FU7Z-Hbv4f9-o_2kxqApl0',
             artist: '@sculpt_god',

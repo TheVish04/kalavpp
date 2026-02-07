@@ -51,7 +51,7 @@ const ProductInfo = ({ product, addToCart, buyNow }) => {
         category
     } = product;
 
-    const artistName = profiles?.full_name || profiles?.username || 'Kalavpp Verified';
+    const artistName = profiles?.full_name || profiles?.username || 'KalaVPP Verified';
     const artistAvatar = profiles?.avatar_url || 'https://via.placeholder.com/150';
     const artistId = profiles?.id;
 
@@ -93,7 +93,7 @@ const ProductInfo = ({ product, addToCart, buyNow }) => {
 
             {/* Price Block */}
             <div className="flex flex-wrap items-center gap-6 mb-8">
-                <span className="text-5xl lg:text-6xl font-bold text-white tracking-tight">${price?.toFixed(2)}</span>
+                <span className="text-5xl lg:text-6xl font-bold text-white tracking-tight">₹{price?.toFixed(2)}</span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/20 border border-primary/30 px-4 py-1.5 text-sm font-semibold text-primary">
                     <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>

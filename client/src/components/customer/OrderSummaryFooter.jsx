@@ -50,7 +50,7 @@ const OrderSummaryFooter = ({ order }) => {
                                     <p className="text-gray-400 text-sm font-medium">{item.quantity || 1}</p>
                                 </div>
                                 <div className="text-right w-24">
-                                    <p className="text-white font-bold">${(item.price_at_purchase || item.price || 0).toFixed(2)}</p>
+                                    <p className="text-white font-bold">₹{(item.price_at_purchase || item.price || 0).toFixed(2)}</p>
                                 </div>
                             </div>
                         );
@@ -61,20 +61,20 @@ const OrderSummaryFooter = ({ order }) => {
                 <div className="border-t border-white/5 pt-6 flex flex-col items-end gap-3">
                     <div className="w-full sm:w-64 flex justify-between text-sm">
                         <span className="text-gray-400">Subtotal</span>
-                        <span className="text-white font-medium">${itemTotal.toFixed(2)}</span>
+                        <span className="text-white font-medium">₹{itemTotal.toFixed(2)}</span>
                     </div>
                     <div className="w-full sm:w-64 flex justify-between text-sm">
                         <span className="text-gray-400">Shipping (Standard)</span>
-                        <span className="text-white font-medium">${shipping > 0 ? shipping.toFixed(2) : '0.00'}</span>
+                        <span className="text-white font-medium">₹{shipping > 0 ? shipping.toFixed(2) : '0.00'}</span>
                     </div>
                     <div className="w-full sm:w-64 flex justify-between text-sm">
                         <span className="text-gray-400">Tax</span>
-                        <span className="text-white font-medium">${tax.toFixed(2)}</span>
+                        <span className="text-white font-medium">₹{tax.toFixed(2)}</span>
                     </div>
                     <div className="w-full sm:w-64 h-px bg-white/10 my-1"></div>
                     <div className="w-full sm:w-64 flex justify-between items-baseline">
                         <span className="text-white font-bold text-lg">Grand Total</span>
-                        <span className="text-primary font-black text-2xl">${grandTotal.toFixed(2)}</span>
+                        <span className="text-primary font-black text-2xl">₹{grandTotal.toFixed(2)}</span>
                     </div>
                 </div>
             </div>

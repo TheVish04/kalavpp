@@ -13,14 +13,14 @@ app.use(express.json());
 
 // Routes
 app.get('/api', (req, res) => {
-    res.json({ message: 'Welcome to Kalavpp API' });
+    res.json({ message: 'Welcome to KalaVPP API' });
 });
 
 import productRoutes from './routes/product.routes';
 app.use('/api', productRoutes);
 
 app.get('/api/test', (req, res) => {
-    res.json({ message: 'Hello from Kalavpp Backend!' });
+    res.json({ message: 'Hello from KalaVPP Backend!' });
 });
 
 // Start server if not running in Vercel (or when run directly)

@@ -28,7 +28,7 @@ const VendorSidebar = () => {
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-purple-400 flex items-center justify-center shadow-[0_0_15px_rgba(140,37,244,0.3)]">
                     <span className="material-symbols-outlined text-white text-lg font-bold">palette</span>
                 </div>
-                <h1 className="text-xl font-bold text-white tracking-tight">Kalavpp</h1>
+                <h1 className="text-xl font-bold text-white tracking-tight">KalaVPP</h1>
             </div>
 
             {/* Navigation */}

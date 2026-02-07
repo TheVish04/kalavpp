@@ -7,13 +7,15 @@ import {
     Briefcase,
     DollarSign,
     Settings,
-    Plus
+    Plus,
+    ShoppingCart
 } from 'lucide-react';
 
 const VendorSidebar = () => {
     const navItems = [
         { name: 'Overview', path: '/vendor/dashboard', icon: LayoutDashboard },
         { name: 'My Products', path: '/vendor/products', icon: Package },
+        { name: 'My Orders', path: '/vendor/orders', icon: ShoppingCart },
         { name: 'Commissions', path: '/vendor/commissions', icon: Briefcase, badge: 1 },
         { name: 'Payouts', path: '/vendor/payouts', icon: DollarSign },
         { name: 'Settings', path: '/vendor/settings', icon: Settings },

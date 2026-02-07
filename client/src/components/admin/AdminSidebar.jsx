@@ -6,7 +6,8 @@ import {
     Users,
     Palette,
     DollarSign,
-    Activity
+    Activity,
+    Tag
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -17,6 +18,7 @@ const AdminSidebar = () => {
     const navItems = [
         { name: 'Platform Overview', path: '/admin/dashboard', icon: LayoutGrid },
         { name: 'User Management', path: '/admin/users', icon: Users },
+        { name: 'Categories', path: '/admin/categories', icon: Tag },
         { name: 'Art Moderation', path: '/admin/moderation', icon: Palette },
         { name: 'Financials', path: '/admin/financials', icon: DollarSign },
         { name: 'System Health', path: '/admin/system', icon: Activity },

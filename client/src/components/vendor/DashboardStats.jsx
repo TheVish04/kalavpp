@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { DollarSign, Eye, Zap, ArrowUp, ArrowDown } from 'lucide-react';
+import { IndianRupee, Eye, Zap, ArrowUp, ArrowDown } from 'lucide-react';
 
 const StatCard = ({ title, value, subtext, icon: Icon, trend }) => {
     return (
@@ -35,9 +35,9 @@ const StatCard = ({ title, value, subtext, icon: Icon, trend }) => {
 
 const DashboardStats = ({ totalRevenue }) => {
     // Other stats are mocked for UI completeness as requested, but Revenue is REAL prop
-    const formattedRevenue = new Intl.NumberFormat('en-US', {
+    const formattedRevenue = new Intl.NumberFormat('en-IN', {
         style: 'currency',
-        currency: 'USD'
+        currency: 'INR'
     }).format(totalRevenue || 0);
 
     return (
@@ -46,7 +46,7 @@ const DashboardStats = ({ totalRevenue }) => {
                 title="Total Revenue"
                 value={formattedRevenue}
                 subtext="vs last month"
-                icon={DollarSign}
+                icon={IndianRupee}
                 trend={12}
             />
             <StatCard

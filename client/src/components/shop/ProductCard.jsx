@@ -53,7 +53,7 @@ const ProductCard = ({ product }) => {
                 <div>
                     <h3 className="font-bold text-lg leading-tight mb-1 group-hover:text-primary transition-colors text-white">{product.title || 'Untitled Artwork'}</h3>
                     <p className="text-gray-400 text-xs mb-2">by <span className="text-white">{product.profiles?.full_name || product.creator || 'Unknown'}</span></p>
-                    <p className="text-xl font-bold text-white">${product.price?.toFixed(2) || '0.00'}</p>
+                    <p className="text-xl font-bold text-white">₹{product.price?.toFixed(2) || '0.00'}</p>
                 </div>
                 <button
                     onClick={(e) => {

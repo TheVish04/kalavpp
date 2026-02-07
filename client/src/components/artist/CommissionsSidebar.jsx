@@ -26,12 +26,12 @@ const CommissionsSidebar = () => {
                 <div className="space-y-3 mb-6">
                     <div className="flex justify-between text-sm">
                         <span className="text-white">Portraits</span>
-                        <span className="text-primary font-bold">from $150</span>
+                        <span className="text-primary font-bold">from ₹150</span>
                     </div>
                     <div className="w-full h-px bg-[#302839]"></div>
                     <div className="flex justify-between text-sm">
                         <span className="text-white">Full Scene</span>
-                        <span className="text-primary font-bold">from $400</span>
+                        <span className="text-primary font-bold">from ₹400</span>
                     </div>
                     <div className="w-full h-px bg-[#302839]"></div>
                     <div className="flex justify-between text-sm">

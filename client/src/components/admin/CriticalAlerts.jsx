@@ -23,7 +23,7 @@ const CriticalAlerts = () => {
                         <div className="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
                             <span className="font-mono">TX-ID: #88392-AK</span>
                             <span>•</span>
-                            <span className="text-gray-400">Value: $15,000.00</span>
+                            <span className="text-gray-400">Value: ₹15,000.00</span>
                         </div>
                     </div>
 

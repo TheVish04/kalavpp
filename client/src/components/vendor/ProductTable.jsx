@@ -90,7 +90,7 @@ const ProductTable = ({ products, onDelete }) => {
                                         </td>
 
                                         <td className="px-6 py-4 text-right">
-                                            <span className="text-sm font-medium text-white">${(product.price || 0).toFixed(2)}</span>
+                                            <span className="text-sm font-medium text-white">₹{(product.price || 0).toFixed(2)}</span>
                                         </td>
 
                                         <td className="px-6 py-4 text-center">

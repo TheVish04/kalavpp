@@ -83,7 +83,7 @@ const RevenueChart = ({ salesData }) => {
                         <Tooltip
                             contentStyle={{ backgroundColor: '#1e1e1e', border: '1px solid #333', borderRadius: '8px' }}
                             itemStyle={{ color: '#fff' }}
-                            formatter={(value) => [`$${value.toFixed(2)}`, 'Revenue']}
+                            formatter={(value) => [`₹${value.toFixed(2)}`, 'Revenue']}
                         />
                         <Area
                             type="monotone"

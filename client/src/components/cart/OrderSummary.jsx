@@ -20,17 +20,17 @@ const OrderSummary = ({ subtotal }) => {
             <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-[#a1a1aa] text-sm">
                     <span>Subtotal</span>
-                    <span className="text-white font-medium">${subtotal.toFixed(2)}</span>
+                    <span className="text-white font-medium">₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-[#a1a1aa] text-sm">
                     <span>Shipping</span>
                     <span className={shipping === 0 ? "text-green-400 font-bold" : "text-white font-medium"}>
-                        {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                        {shipping === 0 ? "Free" : `₹${shipping.toFixed(2)}`}
                     </span>
                 </div>
                 <div className="flex justify-between text-[#a1a1aa] text-sm">
                     <span>Estimated Tax (8%)</span>
-                    <span className="text-white font-medium">${tax.toFixed(2)}</span>
+                    <span className="text-white font-medium">₹{tax.toFixed(2)}</span>
                 </div>
             </div>
 
@@ -38,15 +38,15 @@ const OrderSummary = ({ subtotal }) => {
 
             <div className="flex justify-between items-center mb-8">
                 <span className="text-lg font-bold text-white">Total</span>
-                <span className="text-2xl font-bold text-white">${total.toFixed(2)}</span>
+                <span className="text-2xl font-bold text-white">₹{total.toFixed(2)}</span>
             </div>
 
             <button
                 onClick={() => navigate('/checkout')}
                 disabled={isCartEmpty}
                 className={`w-full font-bold py-3.5 rounded-xl shadow-lg transition-all transform mb-6 ${isCartEmpty
-                        ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-primary to-[#a855f7] hover:from-primary-dark hover:to-primary text-white shadow-primary/25 hover:-translate-y-0.5 active:scale-95'
+                    ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-primary to-[#a855f7] hover:from-primary-dark hover:to-primary text-white shadow-primary/25 hover:-translate-y-0.5 active:scale-95'
                     }`}
             >
                 Proceed to Checkout

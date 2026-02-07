@@ -55,8 +55,8 @@ const Sidebar = ({ filters, setFilters, categories = ['Paintings', '3D Models', 
                         onChange={handlePriceChange}
                     />
                     <div className="flex justify-between mt-4 text-sm font-medium text-gray-300">
-                        <span>$0</span>
-                        <span>${filters.priceRange[1].toLocaleString()}+</span>
+                        <span>₹0</span>
+                        <span>₹{filters.priceRange[1].toLocaleString()}+</span>
                     </div>
                 </div>
             </div>

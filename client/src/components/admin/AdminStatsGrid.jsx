@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { DollarSign, Users, Palette, AlertOctagon, TrendingUp, TrendingDown } from 'lucide-react';
+import { IndianRupee, Users, Palette, AlertOctagon, TrendingUp, TrendingDown } from 'lucide-react';
 
 const AdminStatsGrid = ({ gmv, userCount }) => {
 
@@ -17,11 +17,11 @@ const AdminStatsGrid = ({ gmv, userCount }) => {
             {/* Card 1: Total GMV */}
             <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-6 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <DollarSign size={48} className="text-white" />
+                    <IndianRupee size={48} className="text-white" />
                 </div>
                 <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Total GMV</p>
                 <div className="flex items-end gap-2 mb-4">
-                    <h3 className="text-3xl font-bold text-white">${formatNumber(gmv)}</h3>
+                    <h3 className="text-3xl font-bold text-white">₹{formatNumber(gmv)}</h3>
                     <span className="text-[#10b981] text-xs font-bold mb-1 flex items-center">
                         <TrendingUp size={12} className="mr-0.5" /> 5.2%
                     </span>

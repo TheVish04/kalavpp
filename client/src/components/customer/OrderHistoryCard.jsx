@@ -99,7 +99,7 @@ const OrderHistoryCard = ({ order }) => {
                     </div>
                     <p className="text-[#a1a1aa] text-sm mb-1">Placed on {date}</p>
                     <p className="text-[#a1a1aa] text-sm">
-                        {itemCount} Item{itemCount !== 1 ? 's' : ''} • Total: <span className="text-white font-medium">${order.total_amount?.toFixed(2)}</span>
+                        {itemCount} Item{itemCount !== 1 ? 's' : ''} • Total: <span className="text-white font-medium">₹{order.total_amount?.toFixed(2)}</span>
                     </p>
 
                     <div className="mt-4 flex flex-wrap items-center gap-4">

@@ -67,9 +67,9 @@ const CartItem = ({ item, onRemove, onUpdateQuantity }) => {
 
                 {/* Price */}
                 <div className="text-right min-w-[80px]">
-                    <div className="text-lg font-bold text-white">${(item.price * (item.quantity || 1)).toFixed(2)}</div>
+                    <div className="text-lg font-bold text-white">₹{(item.price * (item.quantity || 1)).toFixed(2)}</div>
                     {(item.quantity > 1) && (
-                        <div className="text-xs text-[#a1a1aa]">${item.price.toFixed(2)} each</div>
+                        <div className="text-xs text-[#a1a1aa]">₹{item.price.toFixed(2)} each</div>
                     )}
                 </div>
 

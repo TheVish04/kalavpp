@@ -16,42 +16,30 @@ const UserManagement = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Mock Applications Data
-    const [applications, setApplications] = useState([
-        {
-            id: 101,
-            name: 'Elena Vance',
-            avatar: 'https://ui-avatars.com/api/?name=Elena+Vance&background=random',
-            location: 'Berlin, Germany',
-            appliedTime: 'Applied 2 hours ago',
-            portfolioLink: 'behance.net/elena',
-            samples: [
-                'https://source.unsplash.com/random/400x300?abstract,art&sig=1',
-                'https://source.unsplash.com/random/400x300?painting&sig=2',
-                'https://source.unsplash.com/random/400x300?sketch&sig=3'
-            ]
-        },
-        {
-            id: 102,
-            name: 'Marcus Chen',
-            avatar: 'https://ui-avatars.com/api/?name=Marcus+Chen&background=random',
-            location: 'Toronto, Canada',
-            appliedTime: 'Applied 5 hours ago',
-            portfolioLink: 'artstation.com/marcus',
-            samples: [
-                'https://source.unsplash.com/random/400x300?3d,render&sig=4',
-                'https://source.unsplash.com/random/400x300?landscape&sig=5',
-                'https://source.unsplash.com/random/400x300?scifi&sig=6'
-            ]
-        }
-    ]);
+    const [applications, setApplications] = useState([]);
 
-    // Fetch Users (Effect)
     useEffect(() => {
-        if (activeTab === 'Users') {
-            fetchUsers();
-        }
+        if (activeTab === 'Applications') fetchApplications();
+        else if (activeTab === 'Users') fetchUsers();
     }, [activeTab]);
+
+    const fetchApplications = async () => {
+        setLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from('vendor_applications')
+                .select('*')
+                .eq('status', 'pending')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            setApplications(data || []);
+        } catch (err) {
+            console.error(err);
+            setApplications([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const fetchUsers = async () => {
         setLoading(true);
@@ -81,15 +69,25 @@ const UserManagement = () => {
         }
     };
 
-    // Actions
-    const handleApprove = (id, name) => {
-        toast.success(`Approved ${name} as a Vendor!`);
-        setApplications(prev => prev.filter(app => app.id !== id));
+    const handleApprove = async (app) => {
+        try {
+            await supabase.from('vendor_applications').update({ status: 'approved' }).eq('id', app.id);
+            await supabase.from('profiles').update({ role: 'vendor' }).eq('id', app.user_id);
+            toast.success(`Approved ${app.full_name || 'applicant'} as a Vendor!`);
+            setApplications(prev => prev.filter(a => a.id !== app.id));
+        } catch (err) {
+            toast.error('Failed to approve.');
+        }
     };
 
-    const handleReject = (id) => {
-        if (window.confirm('Reject this application?')) {
-            setApplications(prev => prev.filter(app => app.id !== id));
+    const handleReject = async (app) => {
+        if (!window.confirm('Reject this application?')) return;
+        try {
+            await supabase.from('vendor_applications').update({ status: 'rejected' }).eq('id', app.id);
+            toast.success('Application rejected.');
+            setApplications(prev => prev.filter(a => a.id !== app.id));
+        } catch (err) {
+            toast.error('Failed to reject.');
         }
     };
 
@@ -161,9 +159,9 @@ const UserManagement = () => {
                             applications.map(app => (
                                 <VendorApplicationCard
                                     key={app.id}
-                                    applicant={app}
-                                    onApprove={handleApprove}
-                                    onReject={handleReject}
+                                    applicant={{ ...app, name: app.full_name, portfolioLink: app.portfolio_link, appliedTime: app.created_at ? new Date(app.created_at).toLocaleString() : '', samples: app.samples || [] }}
+                                    onApprove={() => handleApprove(app)}
+                                    onReject={() => handleReject(app)}
                                 />
                             ))
                         )}

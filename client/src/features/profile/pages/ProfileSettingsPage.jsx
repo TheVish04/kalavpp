@@ -5,6 +5,9 @@ import { useToast } from '../../../store/ToastContext';
 import DashboardSidebar from '../components/DashboardSidebar';
 import AvatarUpload from '../components/AvatarUpload';
 import ProfileForm from '../components/ProfileForm';
+import AddressesTab from '../components/AddressesTab';
+import SecurityTab from '../components/SecurityTab';
+import NotificationsTab from '../components/NotificationsTab';
 
 const ProfileSettings = () => {
     const { user } = useAuth();
@@ -136,12 +139,9 @@ const ProfileSettings = () => {
                         </div>
                     )}
 
-                    {activeTab !== 'Profile' && (
-                        <div className="py-20 text-center text-gray-500 border border-dashed border-white/10 rounded-3xl bg-[#1e1e1e]/20">
-                            <h3 className="text-xl font-bold text-gray-400">Coming Soon</h3>
-                            <p className="text-sm">The {activeTab} settings are under development.</p>
-                        </div>
-                    )}
+                    {activeTab === 'Addresses' && <AddressesTab />}
+                    {activeTab === 'Security' && <SecurityTab />}
+                    {activeTab === 'Notifications' && <NotificationsTab />}
                 </div>
 
             </main>

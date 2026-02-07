@@ -1,24 +1,58 @@
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../../api/supabase';
 
-import React from 'react';
+const ShippingForm = ({ shippingDetails, setShippingDetails, onNext, user }) => {
+    const [addresses, setAddresses] = useState([]);
 
-const ShippingForm = ({ shippingDetails, setShippingDetails, onNext }) => {
+    useEffect(() => {
+        if (user?.id) {
+            supabase.from('addresses').select('*').eq('user_id', user.id).order('is_default', { ascending: false })
+                .then(({ data }) => setAddresses(data || []));
+        }
+    }, [user?.id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setShippingDetails(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setShippingDetails(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSelectAddress = (a) => {
+        if (!a) return;
+        setShippingDetails({
+            firstName: a.first_name || '',
+            lastName: a.last_name || '',
+            email: a.email || '',
+            address: a.address || '',
+            city: a.city || '',
+            state: a.state || '',
+            zip: a.zip || '',
+        });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Basic validation could go here
         onNext();
     };
 
     return (
         <form id="shipping-form" onSubmit={handleSubmit} className="space-y-6">
+            {addresses.length > 0 && (
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-[#a1a1aa]">Use saved address</label>
+                    <select
+                        onChange={(e) => {
+                            const addr = addresses.find(a => a.id === e.target.value);
+                            if (addr) handleSelectAddress(addr);
+                        }}
+                        className="w-full h-[50px] bg-[#1E1E24] border border-white/10 rounded-lg px-4 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    >
+                        <option value="">Enter manually</option>
+                        {addresses.map((a) => (
+                            <option key={a.id} value={a.id}>{a.label || a.first_name} - {a.address}, {a.city}</option>
+                        ))}
+                    </select>
+                </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-[#a1a1aa]">First Name</label>

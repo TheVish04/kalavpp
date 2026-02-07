@@ -7,7 +7,8 @@ import {
     Palette,
     DollarSign,
     Activity,
-    Tag
+    Tag,
+    Package
 } from 'lucide-react';
 import { useAuth } from '../../../store/AuthContext';
 
@@ -18,6 +19,7 @@ const AdminSidebar = () => {
     const navItems = [
         { name: 'Platform Overview', path: '/admin/dashboard', icon: LayoutGrid },
         { name: 'User Management', path: '/admin/users', icon: Users },
+        { name: 'Products', path: '/admin/products', icon: Package },
         { name: 'Categories', path: '/admin/categories', icon: Tag },
         { name: 'Art Moderation', path: '/admin/moderation', icon: Palette },
         { name: 'Financials', path: '/admin/financials', icon: DollarSign },

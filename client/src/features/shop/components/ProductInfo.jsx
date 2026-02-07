@@ -39,7 +39,7 @@ const AccordionItem = ({ title, children, defaultOpen = false }) => {
     );
 };
 
-const ProductInfo = ({ product, addToCart, buyNow }) => {
+const ProductInfo = ({ product, addToCart, buyNow, isNFT }) => {
     const {
         title,
         price,
@@ -66,6 +66,11 @@ const ProductInfo = ({ product, addToCart, buyNow }) => {
                 <Link className="text-white/40 hover:text-primary transition-colors" to={`/shop?category=${category || 'All'}`}>{category || 'Art'}</Link>
             </nav>
 
+            {isNFT && (
+                <span className="inline-flex items-center gap-2 rounded-full bg-purple-500/20 border border-purple-500/30 px-4 py-1.5 text-sm font-semibold text-purple-300 mb-6 w-fit">
+                    <span className="material-symbols-outlined text-[18px]">token</span> NFT • Blockchain-verified
+                </span>
+            )}
             {/* Title */}
             <h1 className="text-4xl lg:text-5xl font-bold text-white leading-[1.1] mb-6 tracking-tight">
                 {title} <br />

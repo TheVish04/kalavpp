@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../../api/supabase';
 import { useToast } from '../../../store/ToastContext';
+import { downloadInvoice, generateInvoiceHTML } from '../../../shared/utils/invoice';
 import { Download, Printer, HelpCircle, ArrowLeft } from 'lucide-react';
 import Navbar from '../../../shared/components/layout/Navbar';
 import Footer from '../../../shared/components/layout/Footer';
@@ -49,8 +50,21 @@ const OrderDetails = () => {
         }
     };
 
-    const handleAction = (action) => {
-        toast.info(`${action} functionality triggered.`);
+    const handleDownloadInvoice = () => {
+        try {
+            downloadInvoice(order);
+            toast.success('Invoice downloaded.');
+        } catch (e) {
+            toast.error('Failed to download invoice.');
+        }
+    };
+
+    const handlePrintInvoice = () => {
+        const html = generateInvoiceHTML(order);
+        const win = window.open('', '_blank');
+        win.document.write(html);
+        win.document.close();
+        win.print();
     };
 
     if (loading) {
@@ -105,13 +119,13 @@ const OrderDetails = () => {
 
                     <div className="flex items-center gap-3">
                         <button
-                            onClick={() => handleAction('PDF Download')}
+                            onClick={handleDownloadInvoice}
                             className="bg-[#1e1e1e] border border-white/10 hover:bg-white/10 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all"
                         >
-                            <Download size={16} /> <span className="hidden sm:inline">Download PDF</span>
+                            <Download size={16} /> <span className="hidden sm:inline">Download Invoice</span>
                         </button>
                         <button
-                            onClick={() => handleAction('Print')}
+                            onClick={handlePrintInvoice}
                             className="bg-[#1e1e1e] border border-white/10 hover:bg-white/10 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all"
                         >
                             <Printer size={16} /> <span className="hidden sm:inline">Print</span>

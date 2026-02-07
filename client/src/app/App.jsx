@@ -42,6 +42,7 @@ import CategoryManagementPage from '../features/admin/pages/CategoryManagementPa
 import ModerationPage from '../features/admin/pages/ModerationPage';
 import FinancialsPage from '../features/admin/pages/FinancialsPage';
 import SystemHealthPage from '../features/admin/pages/SystemHealthPage';
+import AdminProductManagementPage from '../features/admin/pages/AdminProductManagementPage';
 
 function App() {
   return (
@@ -84,6 +85,7 @@ function App() {
             {/* Admin Routes - requires admin only */}
             <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardPage /></ProtectedRoute>} />
             <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['admin']}><UserManagementPage /></ProtectedRoute>} />
+            <Route path="/admin/products" element={<ProtectedRoute allowedRoles={['admin']}><AdminProductManagementPage /></ProtectedRoute>} />
             <Route path="/admin/categories" element={<ProtectedRoute allowedRoles={['admin']}><CategoryManagementPage /></ProtectedRoute>} />
             <Route path="/admin/moderation" element={<ProtectedRoute allowedRoles={['admin']}><ModerationPage /></ProtectedRoute>} />
             <Route path="/admin/financials" element={<ProtectedRoute allowedRoles={['admin']}><FinancialsPage /></ProtectedRoute>} />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { supabase } from '../../../api/supabase';
 import { useToast } from '../../../store/ToastContext';
+import { downloadInvoice } from '../../../shared/utils/invoice';
 import { Link } from 'react-router-dom';
 import { Truck, FileText, ArrowRight, RefreshCw, Package } from 'lucide-react';
 
@@ -54,7 +55,12 @@ const OrderHistoryCard = ({ order }) => {
         if (action === 'track') {
             toast.info(`Tracking # generated for Order #${order.id.slice(0, 8).toUpperCase()}`);
         } else if (action === 'invoice') {
-            toast.info(`Downloading Invoice for Order #${order.id.slice(0, 8).toUpperCase()}`);
+            try {
+                downloadInvoice(order);
+                toast.success('Invoice downloaded.');
+            } catch (e) {
+                toast.error('Failed to download invoice.');
+            }
         }
     };
 

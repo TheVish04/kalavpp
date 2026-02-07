@@ -70,7 +70,7 @@ const ServiceDetails = () => {
                     </div>
 
                     {/* RIGHT COLUMN: Sticky Form */}
-                    <ServiceRequestForm serviceTitle={service.title} />
+                    <ServiceRequestForm serviceId={service.id} serviceTitle={service.title} />
 
                 </div>
             </main>

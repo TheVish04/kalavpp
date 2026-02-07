@@ -1,16 +1,45 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../../api/supabase';
+import { useAuth } from '../../../store/AuthContext';
+import { useToast } from '../../../store/ToastContext';
+import { sanitizeString, sanitizeText } from '../../../shared/utils/sanitize';
 
-const ServiceRequestForm = ({ serviceTitle }) => {
+const ServiceRequestForm = ({ serviceId, serviceTitle }) => {
+    const { user } = useAuth();
+    const toast = useToast();
+    const navigate = useNavigate();
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [serviceType, setServiceType] = useState(serviceTitle || 'General Commission');
+    const [vision, setVision] = useState('');
+    const [deadline, setDeadline] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Simulate API call
-        setTimeout(() => {
-            setIsSubmitted(true);
-            setTimeout(() => setIsSubmitted(false), 3000); // Reset after 3 seconds for demo
-        }, 500);
+        if (!user) {
+            toast.error('Please log in to submit a request.');
+            navigate('/auth?redirect=/services');
+            return;
+        }
+        setIsSubmitted(true);
+        try {
+            const { error } = await supabase.from('service_requests').insert([{
+                user_id: user.id,
+                service_id: serviceId || null,
+                service_type: sanitizeString(serviceType, 100),
+                vision: sanitizeText(vision),
+                deadline: deadline || null,
+                status: 'pending',
+            }]);
+            if (error) throw error;
+            toast.success('Request sent! The artist will get back to you soon.');
+            setVision('');
+            setDeadline('');
+        } catch (err) {
+            toast.error(err.message || 'Failed to send request.');
+        } finally {
+            setIsSubmitted(false);
+        }
     };
 
     return (
@@ -21,20 +50,20 @@ const ServiceRequestForm = ({ serviceTitle }) => {
                     <p className="text-sm text-[#ab9cba] mt-1">Start your creative journey today.</p>
                 </div>
                 <form className="space-y-5" onSubmit={handleSubmit}>
-                    {/* Service Type */}
                     <div className="space-y-1.5">
                         <label className="text-xs font-bold uppercase tracking-wider text-[#ab9cba]">Service Type</label>
                         <div className="relative">
                             <select
-                                defaultValue={serviceTitle}
+                                value={serviceType}
+                                onChange={(e) => setServiceType(e.target.value)}
                                 className="w-full bg-[#121212] border border-[#302839] text-white text-sm rounded-lg focus:ring-primary focus:border-primary block p-3 appearance-none"
                             >
-                                <option>{serviceTitle || 'General Commission'}</option>
-                                <option>Wall Mural</option>
-                                <option>Digital Illustration</option>
-                                <option>Canvas Painting</option>
-                                <option>Portrait Commission</option>
-                                <option>Custom Installation</option>
+                                <option value={serviceTitle || 'General Commission'}>{serviceTitle || 'General Commission'}</option>
+                                <option value="Wall Mural">Wall Mural</option>
+                                <option value="Digital Illustration">Digital Illustration</option>
+                                <option value="Canvas Painting">Canvas Painting</option>
+                                <option value="Portrait Commission">Portrait Commission</option>
+                                <option value="Custom Installation">Custom Installation</option>
                             </select>
                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#ab9cba]">
                                 <span className="material-symbols-outlined">expand_more</span>
@@ -45,11 +74,13 @@ const ServiceRequestForm = ({ serviceTitle }) => {
                     <div className="space-y-1.5">
                         <label className="text-xs font-bold uppercase tracking-wider text-[#ab9cba]">Your Vision</label>
                         <textarea
+                            value={vision}
+                            onChange={(e) => setVision(e.target.value)}
                             className="w-full bg-[#121212] border border-[#302839] text-white text-sm rounded-lg focus:ring-primary focus:border-primary block p-3 resize-none"
                             placeholder="Describe your idea, themes, colors, or emotions you want to capture..."
                             rows="4"
                             required
-                        ></textarea>
+                        />
                     </div>
                     {/* Drag & Drop Zone */}
                     <div className="space-y-1.5">
@@ -68,6 +99,8 @@ const ServiceRequestForm = ({ serviceTitle }) => {
                                 <span className="material-symbols-outlined text-[20px]">calendar_today</span>
                             </div>
                             <input
+                                value={deadline}
+                                onChange={(e) => setDeadline(e.target.value)}
                                 className="bg-[#121212] border border-[#302839] text-white text-sm rounded-lg focus:ring-primary focus:border-primary block w-full ps-10 p-3 placeholder-gray-400 [color-scheme:dark]"
                                 type="date"
                             />

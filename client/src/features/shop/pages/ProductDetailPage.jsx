@@ -83,6 +83,7 @@ const ProductDetails = () => {
     };
 
     const mainImageResolved = getImageUrl(product.image || product.thumbnail);
+    const isNFT = product.category === 'NFT' || product.vertical === 'NFT' || product.type === 'NFT';
 
     // Resolve thumbnails
     // If product.images exists, map it. Else create fallback array using resolved main image
@@ -112,6 +113,7 @@ const ProductDetails = () => {
                     product={product}
                     addToCart={handleAddToCart}
                     buyNow={handleBuyNow}
+                    isNFT={isNFT}
                 />
             </main>
         </div>

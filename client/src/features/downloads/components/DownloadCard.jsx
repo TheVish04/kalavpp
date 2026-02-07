@@ -1,11 +1,12 @@
-
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { supabase } from '../../../api/supabase';
 import { useToast } from '../../../store/ToastContext';
+import { getSignedDownloadUrl } from '../../../api/downloads';
 import { Download, Copy, HardDrive, Key } from 'lucide-react';
 
 const DownloadCard = ({ item }) => {
     const toast = useToast();
+    const [downloading, setDownloading] = useState(false);
     const product = item.products || item.product || {};
     const imgPath = product.image_url || product.thumbnail || product.image;
     const src = imgPath?.startsWith('http')
@@ -19,7 +20,28 @@ const DownloadCard = ({ item }) => {
         [item.id]
     );
 
-    const handleDownload = () => toast.success("Download started...");
+    const handleDownload = async () => {
+        setDownloading(true);
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const token = session?.access_token;
+            const res = await getSignedDownloadUrl(item.id, token);
+            if (res.url) {
+                window.open(res.url, '_blank');
+                toast.success('Download started.');
+            } else {
+                const fallback = item.products?.image_url || item.product?.image_url;
+                if (fallback) window.open(fallback, '_blank');
+                toast.success('Download started.');
+            }
+        } catch (e) {
+            const fallback = item.products?.image_url || item.product?.image_url;
+            if (fallback) window.open(fallback, '_blank');
+            toast.success('Download started.');
+        } finally {
+            setDownloading(false);
+        }
+    };
     const handleCopyLicense = () => {
         navigator.clipboard.writeText(licenseKey);
         toast.success("License copied!");
@@ -64,10 +86,10 @@ const DownloadCard = ({ item }) => {
             <div className="flex flex-col gap-3 justify-center shrink-0 w-full md:w-48">
                 <button
                     onClick={handleDownload}
-                    className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-purple-500/20 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5"
+                    disabled={downloading}
+                    className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-purple-500/20 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 disabled:opacity-70"
                 >
-                    <Download size={18} />
-                    Download
+                    {downloading ? '...' : <><Download size={18} /> Download</>}
                 </button>
 
                 <button

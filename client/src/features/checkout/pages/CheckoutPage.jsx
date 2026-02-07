@@ -198,6 +198,7 @@ const Checkout = () => {
                                         shippingDetails={shippingDetails}
                                         setShippingDetails={setShippingDetails}
                                         onNext={() => setCurrentStep(2)}
+                                        user={user}
                                     />
                                 </div>
                             )}

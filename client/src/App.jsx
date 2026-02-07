@@ -60,7 +60,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order-success" element={<OrderSuccess />} />
-            <Route path="/customer/dashboard" element={<DashboardHome />} />
+            <Route path="/dashboard" element={<DashboardHome />} />
             <Route path="/orders" element={<OrderHistory />} />
             <Route path="/order/:id" element={<OrderDetails />} />
             <Route path="/downloads" element={<MyDownloads />} />

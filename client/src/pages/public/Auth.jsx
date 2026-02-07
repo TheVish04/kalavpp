@@ -41,9 +41,9 @@ const Auth = () => {
 
         // DEV: Mock Login Bypass
         const MOCK_BYPASS = {
-            'customer@gmail.com': { role: 'customer', path: '/shop' },
+            'customer@gmail.com': { role: 'customer', path: '/' },
             'creator@gmail.com': { role: 'vendor', path: '/vendor/dashboard' },
-            'admin@gmail.com': { role: 'admin', path: '/shop' } // Defaulting admin to shop for now
+            'admin@gmail.com': { role: 'admin', path: '/admin/dashboard' }
         };
 
         if (mode === 'login' && MOCK_BYPASS[email.trim()]) {
@@ -65,29 +65,37 @@ const Auth = () => {
                     password,
                     options: {
                         data: { role: role },
-                        emailRedirectTo: `${window.location.origin}/auth`, // Explicit redirect to prevent issues
+                        emailRedirectTo: `${window.location.origin}/auth`,
                     },
                 });
                 if (error) throw error;
-                // Check if session exists (auto-confirm enabled?) or alert user to check email
                 if (data.session) {
-                    navigate(role === 'vendor' ? '/vendor/dashboard' : '/shop');
+                    navigate(role === 'vendor' ? '/vendor/dashboard' : '/');
                 } else {
                     alert('Check your email for the confirmation link!');
                 }
 
             } else {
+                // 1. Sign In
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: email.trim(),
                     password,
                 });
                 if (error) throw error;
 
-                // Redirect based on role
-                // In a real app, you might fetch the user profile to confirm role
-                // For now, we trust the metadata or default to shop
-                const userRole = data.user?.user_metadata?.role || 'customer';
-                navigate(userRole === 'vendor' ? '/vendor/dashboard' : '/shop');
+                // 2. Fetch Profile to get Role
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('role')
+                    .eq('id', data.user.id)
+                    .single();
+
+                const role = profile?.role || 'customer';
+
+                // 3. Redirect Logic
+                if (role === 'admin') navigate('/admin/dashboard');
+                else if (role === 'vendor' || role === 'creator') navigate('/vendor/dashboard');
+                else navigate('/');
             }
         } catch (err) {
             setError(err.message);

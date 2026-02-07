@@ -1,8 +1,8 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../../api/supabase';
 import { useCart } from '../../cart/context/CartContext';
+import { useToast } from '../../../store/ToastContext';
 import ProductGallery from '../components/ProductGallery';
 import ProductInfo from '../components/ProductInfo';
 import Header from '../components/Header';
@@ -11,6 +11,7 @@ const ProductDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { addToCart } = useCart();
+    const toast = useToast();
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -45,8 +46,7 @@ const ProductDetails = () => {
     const handleAddToCart = () => {
         if (product) {
             addToCart(product);
-            // Show toast (mock for now, or use a toast library if added later)
-            alert(`${product.title} added to cart!`);
+            toast.success(`${product.title} added to cart!`);
         }
     };
 

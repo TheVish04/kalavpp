@@ -1,7 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../../api/supabase';
 import { useAuth } from '../../../store/AuthContext';
+import { useToast } from '../../../store/ToastContext';
 import { Download, Loader2 } from 'lucide-react';
 import VendorSidebar from '../components/VendorSidebar';
 import EarningsCard from '../components/EarningsCard';
@@ -10,6 +10,7 @@ import TransactionList from '../components/TransactionList';
 
 const Wallet = () => {
     const { user } = useAuth();
+    const toast = useToast();
     const [loading, setLoading] = useState(true);
 
     // Financial State
@@ -90,10 +91,8 @@ const Wallet = () => {
     };
 
     const handlePayoutRequest = () => {
-        // Here we would create a 'payout_requests' record in DB
-        // For MVP frontend demo:
-        alert('Payout request successfully sent to Admin!');
-        setAvailableBalance(0); // Optimistic clear
+        toast.success('Payout request successfully sent to Admin!');
+        setAvailableBalance(0);
     };
 
     return (

@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 import { useAuth } from '../../../store/AuthContext';
 import { useCart } from '../../../features/cart/context/CartContext';
 
 const Navbar = () => {
-    const { user, signOut } = useAuth();
+    const { user, role, signOut } = useAuth();
     const { cartCount } = useCart();
     const [scrolled, setScrolled] = useState(false);
 
@@ -76,18 +76,22 @@ const Navbar = () => {
                         <span className="text-xl font-bold tracking-tight">KalaVPP</span>
                     </Link>
 
-                    {/* Desktop Links */}
+                    {/* Desktop Links - Market & Services for all */}
                     <div className="hidden lg:flex items-center gap-8">
-                        {['Market', 'Services', 'About', 'Blog'].map((item) => (
-                            <Link
-                                key={item}
-                                to={item === 'Market' ? '/shop' : item === 'Services' ? '/services' : `/${item.toLowerCase()}`}
-                                className="relative text-sm font-medium text-gray-300 hover:text-white transition-colors group"
-                            >
-                                {item}
-                                <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
-                            </Link>
-                        ))}
+                        <Link
+                            to="/shop"
+                            className="relative text-sm font-medium text-gray-300 hover:text-white transition-colors group"
+                        >
+                            Market
+                            <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                        </Link>
+                        <Link
+                            to="/services"
+                            className="relative text-sm font-medium text-gray-300 hover:text-white transition-colors group"
+                        >
+                            Services
+                            <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                        </Link>
                     </div>
                 </div>
 
@@ -108,12 +112,30 @@ const Navbar = () => {
                     <div className="flex items-center gap-3">
                         {user ? (
                             <>
-                                <Link
-                                    to="/dashboard"
-                                    className="hidden sm:flex items-center justify-center text-sm font-bold text-white hover:text-primary transition-colors px-4 h-10"
-                                >
-                                    Dashboard
-                                </Link>
+                                {role === 'admin' && (
+                                    <Link
+                                        to="/admin/dashboard"
+                                        className="hidden sm:flex items-center justify-center text-sm font-bold text-white hover:text-primary transition-colors px-4 h-10"
+                                    >
+                                        Admin
+                                    </Link>
+                                )}
+                                {role === 'vendor' && (
+                                    <Link
+                                        to="/vendor/dashboard"
+                                        className="hidden sm:flex items-center justify-center text-sm font-bold text-white hover:text-primary transition-colors px-4 h-10"
+                                    >
+                                        My Studio
+                                    </Link>
+                                )}
+                                {(role === 'customer' || !role) && (
+                                    <Link
+                                        to="/dashboard"
+                                        className="hidden sm:flex items-center justify-center text-sm font-bold text-white hover:text-primary transition-colors px-4 h-10"
+                                    >
+                                        Dashboard
+                                    </Link>
+                                )}
                                 <Link to="/cart">
                                     <button className="relative flex items-center justify-center size-10 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all border border-white/10">
                                         <span className="material-symbols-outlined text-xl">shopping_cart</span>

@@ -1,9 +1,10 @@
-
 import React, { useState } from 'react';
 import { supabase } from '../../../api/supabase';
+import { useToast } from '../../../store/ToastContext';
 import { Upload, X, Image as ImageIcon, Loader2 } from 'lucide-react';
 
 const ProductImageUpload = ({ imageUrl, onUpload }) => {
+    const toast = useToast();
     const [uploading, setUploading] = useState(false);
 
     const handleUpload = async (event) => {
@@ -33,7 +34,7 @@ const ProductImageUpload = ({ imageUrl, onUpload }) => {
             onUpload(data.publicUrl);
 
         } catch (error) {
-            alert(error.message);
+            toast.error(error.message);
         } finally {
             setUploading(false);
         }

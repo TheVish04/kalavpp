@@ -17,7 +17,12 @@ app.get('/api', (req, res) => {
 });
 
 import productRoutes from './routes/product.routes';
+import paymentRoutes from './routes/payment.routes';
+import downloadsRoutes from './routes/downloads.routes';
+
 app.use('/api', productRoutes);
+app.use('/api', paymentRoutes);
+app.use('/api', downloadsRoutes);
 
 app.get('/api/test', (req, res) => {
     res.json({ message: 'Hello from KalaVPP Backend!' });

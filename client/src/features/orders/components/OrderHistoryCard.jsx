@@ -1,10 +1,11 @@
-
 import React from 'react';
 import { supabase } from '../../../api/supabase';
+import { useToast } from '../../../store/ToastContext';
 import { Link } from 'react-router-dom';
 import { Truck, FileText, ArrowRight, RefreshCw, Package } from 'lucide-react';
 
 const OrderHistoryCard = ({ order }) => {
+    const toast = useToast();
 
     // Status Styles
     const getStatusInfo = (status) => {
@@ -49,12 +50,11 @@ const OrderHistoryCard = ({ order }) => {
     arrivalDate.setDate(arrivalDate.getDate() + 5);
     const arrivalString = arrivalDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
-    // Toast Logic (Simple alert for now as requested)
     const handleAction = (action) => {
         if (action === 'track') {
-            alert(`Tracking # generated for Order #${order.id.slice(0, 8).toUpperCase()}`);
+            toast.info(`Tracking # generated for Order #${order.id.slice(0, 8).toUpperCase()}`);
         } else if (action === 'invoice') {
-            alert(`Downloading Invoice for Order #${order.id.slice(0, 8).toUpperCase()}`);
+            toast.info(`Downloading Invoice for Order #${order.id.slice(0, 8).toUpperCase()}`);
         }
     };
 

@@ -1,9 +1,10 @@
-
 import React, { useState } from 'react';
 import { supabase } from '../../../api/supabase';
+import { useToast } from '../../../store/ToastContext';
 import { Camera, User, Loader2 } from 'lucide-react';
 
 const AvatarUpload = ({ url, onUpload, fullName, username }) => {
+    const toast = useToast();
     const [uploading, setUploading] = useState(false);
 
     const uploadAvatar = async (event) => {
@@ -29,7 +30,7 @@ const AvatarUpload = ({ url, onUpload, fullName, username }) => {
 
             onUpload(event, filePath);
         } catch (error) {
-            alert(error.message);
+            toast.error(error.message);
         } finally {
             setUploading(false);
         }

@@ -1,10 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
+import { useToast } from '../../../store/ToastContext';
 import DashboardSidebar from '../../profile/components/DashboardSidebar';
 import CommissionList from '../components/CommissionList';
 import CommissionChat from '../components/CommissionChat';
 
 const MyCommissions = () => {
+    const toast = useToast();
     // 1. Initial State Data
     const [projects, setProjects] = useState([
         {
@@ -105,7 +106,7 @@ const MyCommissions = () => {
             return p;
         }));
 
-        alert("Milestone Approved! Project status updated."); // Simple feedback
+        toast.success('Milestone Approved! Project status updated.');
     };
 
     const handleRequestRevision = (projectId) => {

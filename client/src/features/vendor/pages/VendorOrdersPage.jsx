@@ -1,7 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../../api/supabase';
 import { useAuth } from '../../../store/AuthContext';
+import { useToast } from '../../../store/ToastContext';
 import { Loader2, Package, Filter, Search } from 'lucide-react';
 import VendorSidebar from '../components/VendorSidebar';
 import OrderTable from '../components/OrderTable';
@@ -9,6 +9,7 @@ import ShipmentModal from '../components/ShipmentModal';
 
 const VendorOrders = () => {
     const { user } = useAuth();
+    const toast = useToast();
     const [loading, setLoading] = useState(true);
     const [orders, setOrders] = useState([]);
 
@@ -100,8 +101,7 @@ const VendorOrders = () => {
             // For demo effectiveness we rely on the component callback completion
         }
 
-        // Show success
-        alert('Order marked as shipped via ' + carrier);
+        toast.success(`Order marked as shipped via ${carrier}`);
     };
 
     return (

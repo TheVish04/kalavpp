@@ -1,7 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../../api/supabase';
+import { useToast } from '../../../store/ToastContext';
 import { Download, Printer, HelpCircle, ArrowLeft } from 'lucide-react';
 import Navbar from '../../../shared/components/layout/Navbar';
 import Footer from '../../../shared/components/layout/Footer';
@@ -11,6 +11,7 @@ import OrderSummaryFooter from '../components/OrderSummaryFooter';
 
 const OrderDetails = () => {
     const { id } = useParams();
+    const toast = useToast();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -49,7 +50,7 @@ const OrderDetails = () => {
     };
 
     const handleAction = (action) => {
-        alert(`${action} functionality triggered.`);
+        toast.info(`${action} functionality triggered.`);
     };
 
     if (loading) {

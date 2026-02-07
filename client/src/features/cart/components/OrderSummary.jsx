@@ -1,15 +1,10 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { calculateOrderTotals } from '../../../shared/constants/order';
 
 const OrderSummary = ({ subtotal }) => {
     const navigate = useNavigate();
-
-    // Dynamic Calculations
-    const taxRate = 0.08;
-    const tax = subtotal * taxRate;
-    const shipping = subtotal > 500 || subtotal === 0 ? 0 : 20.00;
-    const total = subtotal + tax + shipping;
+    const { tax, shipping, total } = calculateOrderTotals(subtotal);
 
     const isCartEmpty = subtotal === 0;
 

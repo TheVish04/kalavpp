@@ -1,10 +1,11 @@
-
 import React from 'react';
 import { supabase } from '../../../api/supabase';
+import { useToast } from '../../../store/ToastContext';
 import { Edit2, Eye, Trash, MoreHorizontal } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const ProductTable = ({ products, onDelete }) => {
+    const toast = useToast();
 
     // Helper for Type Pill
     const getTypeStyles = (category) => {
@@ -31,11 +32,11 @@ const ProductTable = ({ products, onDelete }) => {
             try {
                 const { error } = await supabase.from('products').delete().eq('id', id);
                 if (error) throw error;
-                onDelete(id); // Update UI
-                alert('Product deleted successfully');
+                onDelete(id);
+                toast.success('Product deleted successfully');
             } catch (error) {
                 console.error('Error deleting:', error);
-                alert('Failed to delete product.');
+                toast.error('Failed to delete product.');
             }
         }
     };

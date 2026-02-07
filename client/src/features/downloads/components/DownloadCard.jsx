@@ -1,28 +1,28 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { supabase } from '../../../api/supabase';
-import { Download, Copy, Box, HardDrive, Key } from 'lucide-react';
+import { useToast } from '../../../store/ToastContext';
+import { Download, Copy, HardDrive, Key } from 'lucide-react';
 
 const DownloadCard = ({ item }) => {
-    // Determine product info
+    const toast = useToast();
     const product = item.products || item.product || {};
     const imgPath = product.image_url || product.thumbnail || product.image;
     const src = imgPath?.startsWith('http')
         ? imgPath
         : imgPath ? supabase.storage.from('products').getPublicUrl(imgPath).data.publicUrl : 'https://via.placeholder.com/200x120?text=Asset';
 
-    // Mock Metadata (as requested)
-    const version = "v" + ((item.id % 5) + 1).toFixed(1); // deterministic "random" based on ID
+    const version = "v" + ((item.id % 5) + 1).toFixed(1);
     const fileSize = ((item.id % 9) + 0.5).toFixed(1) + " GB";
-    const licenseKey = `KALA-${item.id.toString(16).toUpperCase().padStart(4, '0')}-${Math.random().toString(36).substr(2, 4).toUpperCase()}-PRO`;
+    const licenseKey = useMemo(
+        () => `KALA-${String(item.id).padStart(4, '0').slice(-4).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}-PRO`,
+        [item.id]
+    );
 
-    const handleDownload = () => {
-        alert("Download started..."); // Mock toast
-    };
-
+    const handleDownload = () => toast.success("Download started...");
     const handleCopyLicense = () => {
         navigator.clipboard.writeText(licenseKey);
-        alert("License copied!"); // Mock toast
+        toast.success("License copied!");
     };
 
     return (

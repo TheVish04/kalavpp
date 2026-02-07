@@ -5,9 +5,25 @@ const AuthContext = createContext({});
 
 export const useAuth = () => useContext(AuthContext);
 
+/** Resolve user role from profile or metadata. Returns 'admin' | 'vendor' | 'customer' */
+async function fetchUserRole(userId) {
+    try {
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', userId)
+            .maybeSingle();
+
+        return profile?.role || null;
+    } catch {
+        return null;
+    }
+}
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [session, setSession] = useState(null);
+    const [role, setRole] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -23,11 +39,14 @@ export const AuthProvider = ({ children }) => {
                     if (session) {
                         setSession(session);
                         setUser(session.user);
+                        const r = await fetchUserRole(session.user.id);
+                        if (mounted) setRole(r || session.user?.user_metadata?.role || 'customer');
+                    } else {
+                        setRole(null);
                     }
                     setLoading(false);
                 }
-            } catch (error) {
-                console.error('Error getting initial session:', error);
+            } catch {
                 if (mounted) setLoading(false);
             }
         }
@@ -36,10 +55,16 @@ export const AuthProvider = ({ children }) => {
 
         const {
             data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
+        } = supabase.auth.onAuthStateChange(async (_event, session) => {
             if (mounted) {
                 setSession(session);
                 setUser(session?.user ?? null);
+                if (session?.user) {
+                    const r = await fetchUserRole(session.user.id);
+                    if (mounted) setRole(r || session.user?.user_metadata?.role || 'customer');
+                } else {
+                    setRole(null);
+                }
                 setLoading(false);
             }
         });
@@ -73,9 +98,13 @@ export const AuthProvider = ({ children }) => {
         if (error) throw error;
     };
 
+    /** Normalized role: 'admin' | 'vendor' | 'customer'. 'creator' maps to 'vendor'. Null when not logged in. */
+    const normalizedRole = user ? (role === 'creator' ? 'vendor' : (role || 'customer')) : null;
+
     const value = {
         user,
         session,
+        role: normalizedRole,
         loading,
         signUp,
         signIn,

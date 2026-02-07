@@ -1,15 +1,11 @@
 
 import React from 'react';
 import { useCart } from '../../cart/context/CartContext';
+import { calculateOrderTotals } from '../../../shared/constants/order';
 
 const CheckoutSummary = () => {
     const { cart, cartTotal } = useCart();
-
-    // Calculations
-    const taxRate = 0.08;
-    const tax = cartTotal * taxRate;
-    const shipping = cartTotal > 500 || cartTotal === 0 ? 0 : 20.00;
-    const total = cartTotal + tax + shipping;
+    const { tax, shipping, total } = calculateOrderTotals(cartTotal);
 
     return (
         <div className="glass-panel p-6 rounded-2xl bg-[#1e1e1e]/40 border border-white/5 sticky top-24">
@@ -31,7 +27,7 @@ const CheckoutSummary = () => {
                             <p className="text-xs text-[#a1a1aa] truncate">@{item.profiles?.full_name || 'Artist'}</p>
                             <div className="flex justify-between items-center mt-1">
                                 <span className="text-xs text-[#a1a1aa]">Qty: {item.quantity}</span>
-                                <span className="text-sm font-medium text-white">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                <span className="text-sm font-medium text-white">₹{((item.price ?? 0) * (item.quantity ?? 1)).toFixed(2)}</span>
                             </div>
                         </div>
                     </div>

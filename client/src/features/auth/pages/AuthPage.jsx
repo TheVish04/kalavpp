@@ -2,14 +2,38 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../../api/supabase';
+import { useAuth } from '../../../store/AuthContext';
+import { useToast } from '../../../store/ToastContext';
+
+/** Returns default dashboard path for role */
+function getDefaultPathForRole(r) {
+    if (r === 'admin') return '/admin/dashboard';
+    if (r === 'vendor' || r === 'creator') return '/vendor/dashboard';
+    return '/dashboard';
+}
+
+/** Returns true if path is a safe internal redirect (starts with /, not // or http) */
+function isSafeRedirect(path) {
+    if (!path || typeof path !== 'string') return false;
+    const trimmed = path.trim();
+    return trimmed.startsWith('/') && !trimmed.startsWith('//') && !trimmed.startsWith('/auth');
+}
+
+/** Email must end with @gmail.com (case-insensitive) */
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+
+/** Strong password: min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char */
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()\-_=+[\]{};:'",.<>\\/|`~])[A-Za-z\d@$!%*?&#^()\-_=+[\]{};:'",.<>\\/|`~]{8,}$/;
 
 const Auth = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const { user, role: userRole, loading: authLoading } = useAuth();
+    const toast = useToast();
 
     // State
     const [mode, setMode] = useState(searchParams.get('mode') === 'signup' ? 'signup' : 'login');
-    const [role, setRole] = useState('customer'); // 'customer' or 'vendor'
+    const [signupRole, setSignupRole] = useState('customer'); // 'customer' or 'vendor'
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -17,46 +41,39 @@ const Auth = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // Redirect if already logged in
+    useEffect(() => {
+        if (authLoading || !user) return;
+        const redirect = searchParams.get('redirect');
+        if (isSafeRedirect(redirect)) {
+            navigate(redirect, { replace: true });
+        } else {
+            navigate(getDefaultPathForRole(userRole), { replace: true });
+        }
+    }, [user, userRole, authLoading, searchParams, navigate]);
+
     // Toggle Mode
     const toggleMode = (newMode) => {
         setMode(newMode);
         setError(null);
     };
 
-
-    // Mock Login Helper
-    const fillMock = (mockEmail, mockPassword) => {
-        setEmail(mockEmail);
-        setPassword(mockPassword);
-    };
-
     // Handle Authentication
     const handleAuth = async (e) => {
         e.preventDefault();
-        console.log('handleAuth triggered', { mode, email: email.trim() }); // Debugging
 
-        if (loading) return; // Prevent double submission
+        if (loading) return;
         setLoading(true);
         setError(null);
 
-        // DEV: Mock Login Bypass
-        const MOCK_BYPASS = {
-            'customer@gmail.com': { role: 'customer', path: '/' },
-            'creator@gmail.com': { role: 'vendor', path: '/vendor/dashboard' },
-            'admin@gmail.com': { role: 'admin', path: '/admin/dashboard' }
-        };
-
-        if (mode === 'login' && MOCK_BYPASS[email.trim()]) {
-            console.log('Using Mock Login Bypass');
-            setTimeout(() => {
-                navigate(MOCK_BYPASS[email.trim()].path);
-                setLoading(false);
-            }, 500); // Fake delay
-            return;
-        }
-
         try {
             if (mode === 'signup') {
+                if (!EMAIL_REGEX.test(email.trim())) {
+                    throw new Error("Only Gmail addresses are allowed (e.g. user@gmail.com)");
+                }
+                if (!PASSWORD_REGEX.test(password)) {
+                    throw new Error("Password must be at least 8 characters with uppercase, lowercase, number, and special character (@$!%*?&#)");
+                }
                 if (password !== confirmPassword) {
                     throw new Error("Passwords do not match");
                 }
@@ -64,15 +81,16 @@ const Auth = () => {
                     email: email.trim(),
                     password,
                     options: {
-                        data: { role: role },
+                        data: { role: signupRole },
                         emailRedirectTo: `${window.location.origin}/auth`,
                     },
                 });
                 if (error) throw error;
                 if (data.session) {
-                    navigate(role === 'vendor' ? '/vendor/dashboard' : '/');
+                    const redirect = searchParams.get('redirect');
+                    navigate(isSafeRedirect(redirect) ? redirect : getDefaultPathForRole(signupRole), { replace: true });
                 } else {
-                    alert('Check your email for the confirmation link!');
+                    toast.info('Check your email for the confirmation link!');
                 }
 
             } else {
@@ -92,14 +110,14 @@ const Auth = () => {
                     .maybeSingle();
 
                 // Priority: DB Profile -> Auth Metadata -> Default 'customer'
-                const role = profile?.role || data.user?.user_metadata?.role || 'customer';
+                const detectedRole = profile?.role || data.user?.user_metadata?.role || 'customer';
 
-                console.log('Login Role Detected:', role);
-
-                // 3. Redirect Logic
-                if (role === 'admin') navigate('/admin/dashboard');
-                else if (role === 'vendor' || role === 'creator') navigate('/vendor/dashboard');
-                else navigate('/');
+                const redirect = searchParams.get('redirect');
+                if (isSafeRedirect(redirect)) {
+                    navigate(redirect, { replace: true });
+                } else {
+                    navigate(getDefaultPathForRole(detectedRole), { replace: true });
+                }
             }
         } catch (err) {
             setError(err.message);
@@ -107,6 +125,15 @@ const Auth = () => {
             setLoading(false);
         }
     };
+
+    // Show loader while auth state is loading or when redirecting logged-in user
+    if (authLoading || user) {
+        return (
+            <div className="min-h-screen bg-[#121212] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary" />
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col lg:flex-row h-screen w-full bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white overflow-hidden">
@@ -252,8 +279,8 @@ const Auth = () => {
                                     className="grid grid-cols-2 gap-4 mb-8 overflow-hidden"
                                 >
                                     <div
-                                        onClick={() => setRole('customer')}
-                                        className={`cursor-pointer glass-panel rounded-2xl p-4 transition-all duration-300 border flex flex-col items-center text-center h-full hover:scale-105 ${role === 'customer'
+                                        onClick={() => setSignupRole('customer')}
+                                        className={`cursor-pointer glass-panel rounded-2xl p-4 transition-all duration-300 border flex flex-col items-center text-center h-full hover:scale-105 ${signupRole === 'customer'
                                             ? 'border-primary bg-primary/10'
                                             : 'border-transparent hover:border-gray-700'
                                             }`}
@@ -275,8 +302,8 @@ const Auth = () => {
                                     </div>
 
                                     <div
-                                        onClick={() => setRole('vendor')}
-                                        className={`cursor-pointer glass-panel rounded-2xl p-4 transition-all duration-300 border flex flex-col items-center text-center h-full hover:scale-105 ${role === 'vendor'
+                                        onClick={() => setSignupRole('vendor')}
+                                        className={`cursor-pointer glass-panel rounded-2xl p-4 transition-all duration-300 border flex flex-col items-center text-center h-full hover:scale-105 ${signupRole === 'vendor'
                                             ? 'border-primary bg-primary/10'
                                             : 'border-transparent hover:border-gray-700'
                                             }`}
@@ -387,19 +414,6 @@ const Auth = () => {
                                 {loading ? 'Processing...' : mode === 'login' ? 'Continue to Gallery' : 'Create Account'}
                             </motion.button>
                         </form>
-
-                        {/* Mock Login Buttons (Dev Helper) */}
-                        <div className="mt-8">
-                            <div className="text-xs text-center text-gray-500 mb-2 font-bold uppercase tracking-wider">Mock Logins (Bypass Auth)</div>
-                            <div className="flex gap-2 justify-center">
-                                <button type="button" onClick={() => fillMock('customer@gmail.com', '12345678')} className="text-[10px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1 rounded border border-white/10">Customer</button>
-                                <button type="button" onClick={() => fillMock('creator@gmail.com', '12345678')} className="text-[10px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1 rounded border border-white/10">Creator</button>
-                                <button type="button" onClick={() => fillMock('admin@gmail.com', '12345678')} className="text-[10px] bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1 rounded border border-white/10">Admin</button>
-                            </div>
-                        </div>
-
-
-
 
                         {/* Divider */}
                         <div className="relative my-8">

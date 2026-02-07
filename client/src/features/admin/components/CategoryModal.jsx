@@ -1,9 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { X, Lock, Upload, Loader2, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '../../../api/supabase';
+import { useToast } from '../../../store/ToastContext';
 
 const CategoryModal = ({ isOpen, onClose, category, onSave }) => {
+    const toast = useToast();
     // Form State
     const [name, setName] = useState('');
     const [slug, setSlug] = useState('');
@@ -90,7 +91,7 @@ const CategoryModal = ({ isOpen, onClose, category, onSave }) => {
 
         } catch (error) {
             console.error('Error saving category:', error);
-            alert('Failed to save category. See console for details.');
+            toast.error('Failed to save category. See console for details.');
         } finally {
             setLoading(false);
         }

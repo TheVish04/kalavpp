@@ -1,13 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../api/supabase';
 import { useAuth } from '../../../store/AuthContext';
+import { useToast } from '../../../store/ToastContext';
 import DashboardSidebar from '../components/DashboardSidebar';
 import AvatarUpload from '../components/AvatarUpload';
 import ProfileForm from '../components/ProfileForm';
 
 const ProfileSettings = () => {
     const { user } = useAuth();
+    const toast = useToast();
     const [loading, setLoading] = useState(true);
     const [profile, setProfile] = useState(null);
     const [activeTab, setActiveTab] = useState('Profile');
@@ -52,12 +53,11 @@ const ProfileSettings = () => {
         });
 
         if (error) {
-            alert(error.message);
+            toast.error(error.message);
         } else {
-            // Get public URL to update local state immediately
             const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
             setProfile(prev => ({ ...prev, avatar_url: filePath }));
-            alert('Avatar updated!');
+            toast.success('Avatar updated!');
         }
     };
 

@@ -1,13 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../api/supabase';
+import { useToast } from '../../../store/ToastContext';
 import { LayoutGrid, Plus, Search, Loader2 } from 'lucide-react';
 import AdminSidebar from '../components/AdminSidebar';
 import CategoryCard from '../components/CategoryCard';
 import CategoryModal from '../components/CategoryModal';
 
 const CategoryManagement = () => {
-    // State
+    const toast = useToast();
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -65,13 +65,12 @@ const CategoryManagement = () => {
                 .from('categories')
                 .update(categoryData)
                 .eq('id', id);
-            if (error) alert('Error updating category');
+            if (error) toast.error('Error updating category');
         } else {
-            // Insert
             const { error } = await supabase
                 .from('categories')
                 .insert([categoryData]);
-            if (error) alert('Error creating category');
+            if (error) toast.error('Error creating category');
         }
 
         await fetchCategories(); // Refresh grid

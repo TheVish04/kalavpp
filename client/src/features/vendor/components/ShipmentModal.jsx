@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { X, Send, Truck, Package, Info } from 'lucide-react';
-import { supabase } from '../../../api/supabase';
+import { useToast } from '../../../store/ToastContext';
 
 const ShipmentModal = ({ isOpen, onClose, order, onConfirmShipment }) => {
+    const toast = useToast();
     const [carrier, setCarrier] = useState('FedEx');
     const [trackingNumber, setTrackingNumber] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -14,7 +14,7 @@ const ShipmentModal = ({ isOpen, onClose, order, onConfirmShipment }) => {
         e.preventDefault();
 
         if (!trackingNumber.trim()) {
-            alert('Please enter a tracking number.');
+            toast.error('Please enter a tracking number.');
             return;
         }
 
@@ -31,7 +31,7 @@ const ShipmentModal = ({ isOpen, onClose, order, onConfirmShipment }) => {
 
         } catch (error) {
             console.error('Shipment error:', error);
-            alert('Failed to update shipment.');
+            toast.error('Failed to update shipment.');
         } finally {
             setSubmitting(false);
         }

@@ -1,16 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../../api/supabase';
 import { useAuth } from '../../../store/AuthContext';
+import { useToast } from '../../../store/ToastContext';
 import { X, ArrowRight, Loader2 } from 'lucide-react';
 import ProductImageUpload from '../components/ProductImageUpload';
 import ProductForm from '../components/ProductForm';
 
 const AddEditProduct = () => {
-    const { id } = useParams(); // If ID exists, we are in Edit mode
+    const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const toast = useToast();
 
     const [loading, setLoading] = useState(false);
     const [initializing, setInitializing] = useState(!!id); // True if editing, to load data
@@ -69,7 +70,7 @@ const AddEditProduct = () => {
             }
         } catch (error) {
             console.error('Error loading product:', error);
-            alert('Failed to load product data.');
+            toast.error('Failed to load product data.');
             navigate('/vendor/products');
         } finally {
             setInitializing(false);
@@ -85,7 +86,7 @@ const AddEditProduct = () => {
             setLoading(true);
 
             if (!formState.title || !formState.price) {
-                alert('Please fill in required fields (Name, Price).');
+                toast.error('Please fill in required fields (Name, Price).');
                 setLoading(false);
                 return;
             }
@@ -115,12 +116,12 @@ const AddEditProduct = () => {
 
             if (error) throw error;
 
-            alert('Product Published Successfully!');
+            toast.success('Product Published Successfully!');
             navigate('/vendor/products');
 
         } catch (error) {
             console.error('Error saving product:', error);
-            alert('Error saving product: ' + error.message);
+            toast.error('Error saving product: ' + error.message);
         } finally {
             setLoading(false);
         }

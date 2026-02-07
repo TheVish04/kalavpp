@@ -1,11 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../api/supabase';
+import { useToast } from '../../../store/ToastContext';
 import { Download, LayoutDashboard, Flag } from 'lucide-react';
 import VendorApplicationCard from '../components/VendorApplicationCard';
 import UserTable from '../components/UserTable';
 
 const UserManagement = () => {
+    const toast = useToast();
 
     // Tab State
     const [activeTab, setActiveTab] = useState('Applications'); // 'Applications' | 'Users'
@@ -82,7 +83,7 @@ const UserManagement = () => {
 
     // Actions
     const handleApprove = (id, name) => {
-        alert(`Approved ${name} as a Vendor!`);
+        toast.success(`Approved ${name} as a Vendor!`);
         setApplications(prev => prev.filter(app => app.id !== id));
     };
 

@@ -1,9 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../cart/context/CartContext';
 import { useAuth } from '../../../store/AuthContext';
+import { useToast } from '../../../store/ToastContext';
 import { supabase } from '../../../api/supabase';
+import { createPaymentOrder, verifyPayment } from '../../../api/payment';
+import { calculateOrderTotals } from '../../../shared/constants/order';
 import Navbar from '../../../shared/components/layout/Navbar';
 import Footer from '../../../shared/components/layout/Footer';
 import CheckoutSummary from '../components/CheckoutSummary';
@@ -14,6 +16,7 @@ const Checkout = () => {
     const navigate = useNavigate();
     const { cart, cartTotal, clearCart } = useCart();
     const { user } = useAuth();
+    const toast = useToast();
 
     const [currentStep, setCurrentStep] = useState(1);
     const [shippingDetails, setShippingDetails] = useState({
@@ -28,28 +31,20 @@ const Checkout = () => {
         }
     }, [cart, navigate]);
 
-    // Calculate Final Total for Submission
-    const taxRate = 0.08;
-    const tax = cartTotal * taxRate;
-    const shippingCost = cartTotal > 500 || cartTotal === 0 ? 0 : 20.00;
-    const finalTotal = cartTotal + tax + shippingCost;
+    const { total: finalTotal } = calculateOrderTotals(cartTotal);
+    const amountInPaise = Math.round(finalTotal * 100);
 
-    const handlePaymentSubmit = async () => {
-        if (!user) {
-            // Should probably force login before checkout, but for now we proceed or alert
-            console.warn("User not logged in, proceeding as guest might require more logic.");
-        }
-
+    const handlePayWithRazorpay = async () => {
         setLoading(true);
         try {
-            // 1. Create Order
+            // 1. Create platform order (pending)
             const { data: order, error: orderError } = await supabase
                 .from('orders')
                 .insert([
                     {
-                        user_id: user?.id || null, // Handle guest checkout if allowed, or enforce auth
+                        user_id: user?.id || null,
                         total_amount: finalTotal,
-                        status: 'pending', // or 'paid'
+                        status: 'pending',
                         shipping_details: shippingDetails
                     }
                 ])
@@ -58,30 +53,99 @@ const Checkout = () => {
 
             if (orderError) throw orderError;
 
-            // 2. Create Order Items
-            if (order) {
+            // 2. Create Razorpay order via server
+            const rzpOrder = await createPaymentOrder(amountInPaise, order.id, {
+                user_id: user?.id,
+                platform_order_id: order.id,
+            });
+
+            if (rzpOrder.error) throw new Error(rzpOrder.error || 'Failed to create payment order');
+
+            // Mock mode: no Razorpay keys - complete order directly (dev only)
+            if (rzpOrder.orderId?.startsWith('order_mock_')) {
                 const orderItems = cart.map(item => ({
                     order_id: order.id,
                     product_id: item.id,
-                    quantity: item.quantity || 1,
-                    price_at_purchase: item.price
+                    quantity: item.quantity ?? 1,
+                    price_at_purchase: item.price ?? 0
                 }));
-
-                const { error: itemsError } = await supabase
-                    .from('order_items')
-                    .insert(orderItems);
-
-                if (itemsError) throw itemsError;
-
-                // 3. Success
+                await supabase.from('order_items').insert(orderItems);
+                await supabase.from('orders').update({ status: 'paid' }).eq('id', order.id);
                 clearCart();
-                navigate('/order-success');
+                navigate(`/order-success?orderId=${order.id}&status=success`);
+                setLoading(false);
+                return;
             }
 
-        } catch (error) {
-            console.error('Checkout Error:', error);
-            alert('Payment failed. Please try again.');
-        } finally {
+            if (!window.Razorpay) throw new Error('Razorpay checkout not loaded. Refresh and try again.');
+
+            // 3. Open Razorpay checkout
+            const options = {
+                key: rzpOrder.keyId,
+                amount: amountInPaise,
+                currency: 'INR',
+                order_id: rzpOrder.orderId,
+                name: 'KALAVPP',
+                description: 'ArtCommerce & Creative Services',
+                prefill: {
+                    name: `${shippingDetails.firstName} ${shippingDetails.lastName}`.trim() || 'Customer',
+                    email: shippingDetails.email || user?.email,
+                },
+                theme: { color: '#8c25f4' },
+                handler: async (response) => {
+                    try {
+                        // 4. Verify payment on server
+                        const verified = await verifyPayment(
+                            response.razorpay_payment_id,
+                            response.razorpay_signature,
+                            response.razorpay_order_id
+                        );
+
+                        if (!verified) {
+                            toast.error('Payment verification failed.');
+                            return;
+                        }
+
+                        // 5. Insert order items and update order status
+                        const orderItems = cart.map(item => ({
+                            order_id: order.id,
+                            product_id: item.id,
+                            quantity: item.quantity ?? 1,
+                            price_at_purchase: item.price ?? 0
+                        }));
+
+                        const { error: itemsError } = await supabase
+                            .from('order_items')
+                            .insert(orderItems);
+
+                        if (itemsError) throw itemsError;
+
+                        await supabase
+                            .from('orders')
+                            .update({ status: 'paid' })
+                            .eq('id', order.id);
+
+                        clearCart();
+                        navigate(`/order-success?orderId=${order.id}&status=success`);
+                    } catch (err) {
+                        toast.error('Failed to complete order. Contact support.');
+                    } finally {
+                        setLoading(false);
+                    }
+                },
+                modal: {
+                    ondismiss: () => setLoading(false),
+                },
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', () => {
+                toast.error('Payment failed. Please try again.');
+                setLoading(false);
+            });
+            rzp.open();
+        } catch (err) {
+            toast.error(err.message || 'Payment failed. Please try again.');
             setLoading(false);
         }
     };
@@ -157,7 +221,7 @@ const Checkout = () => {
                                     <PaymentStep
                                         total={finalTotal}
                                         onBack={() => setCurrentStep(1)}
-                                        onSubmit={handlePaymentSubmit}
+                                        onPayWithRazorpay={handlePayWithRazorpay}
                                         loading={loading}
                                     />
                                 </div>

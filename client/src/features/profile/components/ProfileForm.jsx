@@ -1,9 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../api/supabase';
+import { useToast } from '../../../store/ToastContext';
 import { Lock, User, Mail, Globe, Save } from 'lucide-react';
 
 const ProfileForm = ({ user, profile, setProfile }) => {
+    const toast = useToast();
     const [loading, setLoading] = useState(false);
     const [originalProfile, setOriginalProfile] = useState(null);
 
@@ -35,11 +36,11 @@ const ProfileForm = ({ user, profile, setProfile }) => {
             const { error } = await supabase.from('profiles').upsert(updates);
             if (error) throw error;
 
-            setOriginalProfile(profile); // Sync state on success
-            alert('Profile updated successfully!'); // Mock toast
+            setOriginalProfile(profile);
+            toast.success('Profile updated successfully!');
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Error updating profile!');
+            toast.error('Error updating profile!');
         } finally {
             setLoading(false);
         }
